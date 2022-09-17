@@ -1,0 +1,113 @@
+
+
+.container-related {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+    /* min-height: 550px; */
+    min-width: 300px;
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    /* min-height: 475px; */
+    width: 100%;
+    min-width: 350px;
+    /* background-color: #292b2c; */
+    /* box-shadow: inset 0px 0px 35px black; */
+    overflow: hidden;
+}
+
+.card-related {
+    display: flex;
+    flex-direction: column;
+    max-height: 350px;
+    min-height: 350px;
+    max-width: 300px;
+    min-width: 300px;
+    margin: 0px 30px;
+    border: 1px solid #dfbcbc;
+    border-radius: 10px;
+    background: white;
+    /* box-shadow: 0px 0px 25px black; */
+    transition: transform 0.2s;
+}
+
+.card-img-related{
+    border-radius: 10px 10px 0px 0px;
+    background: rgb(58, 95, 111);
+    /* min-height: 140px; */
+    width: 100%;
+}
+
+.card-img-related2{
+    border-radius: 10px 10px 0px 0px;
+    /* background: rgb(58, 95, 111); */
+    /* min-height: 140px; */
+    max-height: 170px;
+    width: 100%;
+}
+
+.card-title-related{
+    padding: 0px 15px 0px 15px;
+    margin-top: 5px;
+}
+
+.card-text-related{
+    padding: 0px 15px 0px 15px;
+}
+
+.card-text-related p{
+    font-size: 13px;
+}
+
+.card-btn{
+    border: none;
+    color: white;
+    text-align: center;
+    background-color: #BAD7DF;
+    border-bottom-left-radius: 8px;
+    margin: auto -1px -1px -1px;
+    padding: 10px;
+    border-bottom-right-radius: 8px;
+}
+
+.card-btn:hover{
+    background-color: #99ddcc;
+}
+
+.card-mover-btn{
+    position: absolute;
+}
+
+.btn7{
+    font-size: 30px;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.224);
+    transition: background-color 0.05s;
+}
+
+.btn7:hover{
+    background-color: rgba(101, 101, 101, 0.722);
+}
+
+.prev-cont{
+    margin-right: 98%
+}
+
+.next-cont{
+    margin-left: 98%;
+}
+
+@media(max-width: 630px){
+    .card-related:first-child{
+        margin-left: 25px;
+    } 
+}

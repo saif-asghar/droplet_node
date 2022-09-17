@@ -1,0 +1,139 @@
+<%- include('header') %> 
+
+
+
+
+
+        <form action="/categories" method="post">
+        <!-- Sort bar -->
+        <div class="container">
+            <ul class="nav nav-tabs">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Categories</a>
+              <ul class="dropdown-menu">
+                <li><button name="btnCategory" value="all" class="dropdown-item" href="#">All</button></li>
+                <li><button name="btnCategory" value="smartphones" class="dropdown-item" href="#">Smartphones</button></li>
+                <li><button name="btnCategory" value="laptops" class="dropdown-item" href="#">Laptops</button></li>
+                <li><button name="btnCategory" value="fragrances" class="dropdown-item" href="#">Fragrances</button></li>
+                <li><button name="btnCategory" value="skinCare" class="dropdown-item" href="#">Skincare</button></li>
+                <li><button name="btnCategory" value="groceries" class="dropdown-item" href="#">Groceries</button></li>
+                <li><button name="btnCategory" value="decor" class="dropdown-item" href="#">Home Decoration</button></li>
+                <li><button name="btnCategory" value="furniture" class="dropdown-item" href="#">Furniture</button></li>
+                <li><button name="btnCategory" value="tops" class="dropdown-item" href="#">Tops</button></li>
+                <li><button name="btnCategory" value="womensDress" class="dropdown-item" href="#">Womens Dresses</button></li>
+                <li><button name="btnCategory" value="mensShirts" class="dropdown-item" href="#">Mens Shirts</button></li>
+                <li><button name="btnCategory" value="mensShoes" class="dropdown-item" href="#">Mens Shoes</button></li>
+                <li><button name="btnCategory" value="mensWatches" class="dropdown-item" href="#">Mens Watches</button></li>
+                <li><button name="btnCategory" value="womensWatches" class="dropdown-item" href="#">Womens Watches</button></li>
+                <li><button name="btnCategory" value="womensBags" class="dropdown-item" href="#">Womens Bags</button></li>
+                <li><button name="btnCategory" value="womensJewellery" class="dropdown-item" href="#">Womens Jewellery</button></li>
+                <li><button name="btnCategory" value="sunglasses" class="dropdown-item" href="#">Sunglasses</button></li>
+                <li><button name="btnCategory" value="automotive" class="dropdown-item" href="#">Automotive</button></li>
+                <li><button name="btnCategory" value="motorcycle" class="dropdown-item" href="#">Motorcycle</button></li>
+                <li><button name="btnCategory" value="lighting" class="dropdown-item" href="#">Lighting</button></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Sort</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Price Low to High</a></li>
+                <li><a class="dropdown-item" href="#">Price High to Low</a></li>
+                <li><a class="dropdown-item" href="#">Rating</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+    </form>
+
+
+
+
+
+
+        
+            <!--PRODUCT CARDS-->
+            <div class="container py-5">
+                <div class="row">
+
+                    <%if(foundItemsNew.length > 0){%>
+                        <%for (const product of Object.entries(foundItemsNew)){%>
+                            <form class="col-lg-3" action="/product-details" method="post">
+                        <!-- Product Card -->
+                        <div id="productCard">
+                            <div class="product_card">
+                              <div class="card border-0">
+                                <div class="card-header bg-transparent border-0 p-0">
+                                <img class="card-img-top" style="border-radius: 5px; max-height: 306px;" src="<%= product[1].thumbnail %>" alt="">
+                                <div class="card-overlay">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-secondary"><i class="fa fa-heart"></i></button>
+                                    <button type="submit" class="btn btn-light"><i class="fa fa-shopping-cart"></i> Add to cart</button>
+                                    </div>
+                                </div>
+                                <!-- <div class="details-btn">
+                                    <a href="#" class="btn btn-dark">View Details</a>
+                                </div> -->
+                                </div>
+                                <div class="card-body">
+                                <small>
+                                    <a class="text-muted"><%= product[1].brand %></a>
+                                </small>
+                                <strong>
+                                    <button style="text-transform: capitalize;" class="text-body"><%= product[1].title %></button>
+                                </strong>
+                                <div class="price">
+                                    <!-- <span class="text-decoration-line-through">৳ 870</span> -->
+                                    <span class="text-warning">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-half-o"></i>
+                                    </span>
+                                </div>
+                                <div class="price">
+                                    <!-- <span class="text-decoration-line-through">৳ 870</span> -->
+                                    <span class="text-warning">$<%= product[1].price %></span>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div style="display: none;">
+                            <input type="text" name="productID" value="<%= product[1]._id %>">
+                            <input type="text" name="productCategory" value="<%= product[1].category %>">
+                        </div>
+                        <!-- /Product Card -->
+                    </form>
+                        <%}%>
+                    <%}else{%>
+                        
+                        <div class="no-products">
+                            
+                            <h5><i class="fa fa-warning"></i>Sorry, No products found.</h5>
+                            
+                        </div>
+
+                    <%}%>
+
+                </div>
+            </div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        <script src="js/searchBar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<%- include('footer') %> 
