@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 const _ = require('lodash');
 const { escapeRegExp } = require("lodash");
+const md5 = require('md5');
 require("./conn/db");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by NodeJs END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -80,6 +81,8 @@ const techitemScehma = new mongoose.Schema({
 
 app.post('/signup', function(req, res){
   
+    const foundItems = req.body.foundItems;
+    
     const signUpfName = req.body.signupfName;
     const signUplName = req.body.signuplName;
     const signUpEmail = req.body.signupEmail;
@@ -95,7 +98,13 @@ app.post('/signup', function(req, res){
       if(err){
         console.log(err);
       }else{
-        res.render('home', {signUpfName: signUpfName, signUplName: signUplName, signUpEmail: signUpEmail});
+        res.render('buyer/home', 
+        {
+            signUpfName: signUpfName, 
+            signUplName: signUplName, 
+            signUpEmail: signUpEmail,
+            foundItems: foundItems
+        });
       };
     });
   });
@@ -110,10 +119,48 @@ app.post('/signup', function(req, res){
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 app.get('/login', function(req, res){
-    res.render('login');
+    res.render('guest/login');
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Login page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/login', function(req, res){
+    
+    const loginEmail = req.body.loginEmail;
+    const loginPass = md5(req.body.loginPass);
+
+    
+    Identification.findOne({email: loginEmail}, function(err, foundUser){
+        if(err){
+          console.log(err)
+        }else{
+            if(foundUser){
+              if(foundUser.password === loginPass){
+    
+                const signUpfName = foundUser.fname;
+                const signUplName = foundUser.lname;
+                const signUpEmail = loginEmail;
+    
+                res.redirect('/');
+              }else{
+                console.log('incorrect pass');
+              }
+            }else{
+              console.log('incorrect email');
+            }
+          }
+        });
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 
@@ -131,7 +178,7 @@ app.get('/', function(req, res){
             console.log(err);
         }else{
             // console.log(foundItems);
-            res.render('home', {foundItems: foundItems})
+            res.render('guest/home', {foundItems: foundItems})
         }
     })
 
@@ -188,11 +235,11 @@ app.post('/products', function(req, res){
                     
                 }
                 // console.log(foundItemsNew);
-                res.render('products', {foundItemsNew: foundItemsNew})
+                res.render('guest/products', {foundItemsNew: foundItemsNew})
             }
         }else{
 
-            res.render('products', {foundItemsNew: foundItemsNew});
+            res.render('guest/products', {foundItemsNew: foundItemsNew});
 
         }
     })
@@ -216,7 +263,7 @@ app.post('/products-categories', function(req, res){
                 console.log(err);
             }else{
                 // console.log(foundItemsNew);
-                res.render('products', {foundItemsNew: foundItemsNew})
+                res.render('guest/products', {foundItemsNew: foundItemsNew})
             }
         })
     }
@@ -245,7 +292,7 @@ app.post('/products-categories', function(req, res){
                 console.log(err);
             }else{
                 // console.log(foundItems);
-                res.render('products', {foundItemsNew: foundItemsNew})
+                res.render('guest/products', {foundItemsNew: foundItemsNew})
             }
         })   
     }
@@ -326,7 +373,7 @@ app.post('/products-:productName', function(req, res){
                 }else{
                     // console.log(foundInfo[0].raring);
                     // console.log(foudInfoAll[1]._id);
-                    res.render('productDetail', {foundInfo: foundInfo, foundInfoAll: foundInfoAll})
+                    res.render('guest/productDetail', {foundInfo: foundInfo, foundInfoAll: foundInfoAll})
                 }
             })
         }

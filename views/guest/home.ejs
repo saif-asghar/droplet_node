@@ -50,7 +50,7 @@
                     <button name="btnsNav" value="logo" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></button>
                     <button type="button" id="cart" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
                     <!-- <button name="btnsNav" value="signup" class="animate">Sign Up</button> -->
-                    <button name="btnsNav" value="login" id="loginBtn" class="animate">Lodg   In</button>
+                    <button name="btnsNav" value="login" id="loginBtn" class="animate">Log In</button>
                 </form>
                     <div style="position: absolute; width: 70%; left: 15%;">
                         <form action="/products" method="post">
@@ -70,6 +70,7 @@
 
         <!--MAIN-->
         <form action="/products-categories" method="post">
+            <input type="text" name="foundItems" style="display: none;" value="<%= foundItems %>">
         <main id="main0" style="background-image:url('https://i.postimg.cc/h4xMcxZx/banner.jpg');">
             <section>
                 <em>Eco friendly</em>
@@ -101,6 +102,7 @@
                 <div class="slide-track">
                     <div class="slide">
                         <img src="<%= foundItems[11].thumbnail %>" height="100" alt="" />
+                        
                     </div>
                     <div class="slide">
                         <img src="./pics/pheonox.png" height="100" alt="" />
@@ -253,6 +255,7 @@
 <!-- JAVASCRIPT -->
 <script src="js/home.js"></script>
 <script src="js/searchBar.js"></script>
+<script src="js/cart.js"></script>
 
 
         

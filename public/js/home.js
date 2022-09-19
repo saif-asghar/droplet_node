@@ -48,20 +48,6 @@ myfunc();
 
 
 
-//CART BUTTON REDIRECTIONS START
-
-const cartBtn = document.getElementById('cart');
-const loginBtn = document.getElementById('loginBtn');
-
-cartBtn.addEventListener('click', function(){
-    if(loginBtn.innerHTML === 'Log In'){
-        alert('Please Login First to see your Cart')
-    }else{
-        window.location = '/login';
-    }
-})
-
-//CART BUTTON REDIRECTIONS END
 
 
 

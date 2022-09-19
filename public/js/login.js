@@ -4,3 +4,17 @@ document.querySelector('.img__btn').addEventListener('click', function() {
   });
   // Login Sign Up Page END
   
+
+
+const buyerBtn = document.getElementById('buyerBtn'),
+sellerBtn = document.getElementById('sellerBtn');
+
+buyerBtn.addEventListener('click', function(){
+  buyerBtn.classList.add('active');
+  sellerBtn.classList.remove('active');
+})
+
+sellerBtn.addEventListener('click', function(){
+  buyerBtn.classList.remove('active');
+  sellerBtn.classList.add('active');
+})

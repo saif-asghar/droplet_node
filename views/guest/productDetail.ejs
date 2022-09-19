@@ -49,9 +49,9 @@
                 
                 <form action="/custom" method="post">
                     <button name="btnsNav" value="logo" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></button>
-                    <button value="cart" name="btnsNav" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
+                    <button type="button" id="cart" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
                     <!-- <button name="btnsNav" value="signup" class="animate">Sign Up</button> -->
-                    <button name="btnsNav" value="login" class="animate">Log In</button>
+                    <button name="btnsNav" value="login" id="loginBtn" class="animate">Log In</button>
                 </form>
                     
                     <div style="position: absolute; width: 70%; left: 15%;">
@@ -183,8 +183,8 @@
 
 
                         </div>
-                        <button class="product__btn">Add to cart</button>
-                        <button class="product__btn">Buy Now</button>
+                        <button id="addToCartBtn" class="product__btn">Add to cart</button>
+                        <button id="buyNowBtn" class="product__btn">Buy Now</button>
                     </div>
                 </div>
             </div>
@@ -292,9 +292,16 @@
                                 
                             <%}%>
 
+                <form action="/products-<%= (foundInfoAll[i].title).toLowerCase() %>" method="post">
+                    <div style="display: none;">
+                        <input type="text" name="productID" value="<%= foundInfoAll[i]._id %>">
+                        <input type="text" name="productCategory" value="<%= foundInfoAll[i].category %>">
+                        <input type="text" name="productTitleForParam" value="<%= (foundInfoAll[i].title).toLowerCase() %>">
                     </div>
-                    <button type="button" class="card-btn">View Details</button>
+                        </div>
+                        <button type="submit" class="card-btn">View Details</button>
                     </div>
+                </form>
                 <%}%>
 
                 
@@ -318,4 +325,6 @@
 
     <script src="js/related.js"></script>
     <script src="js/searchBar.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/addToCart.js"></script>
     <%- include('footer') %>
