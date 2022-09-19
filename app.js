@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const https = require("https");
 const mongoose = require("mongoose");
 const fs = require("fs");
+const _ = require('lodash');
+const { escapeRegExp } = require("lodash");
 require("./conn/db");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by NodeJs END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -25,6 +27,25 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by APP END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                4. { ID Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+const signupSchema = new mongoose.Schema({
+  fname: String,
+  lname: String,
+  email: String,
+  password: String,
+});
+
+const Identification = mongoose.model("Identification", signupSchema);
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
 
 
@@ -54,82 +75,54 @@ const techitemScehma = new mongoose.Schema({
 
 
 
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/signup', function(req, res){
+  
+    const signUpfName = req.body.signupfName;
+    const signUplName = req.body.signuplName;
+    const signUpEmail = req.body.signupEmail;
+    const signUpPass = req.body.signupPass;
+  
+    const identity = new Identification({
+      fname: signUpfName,
+      lname: signUplName,
+      email: signUpEmail,
+      password: md5(signUpPass),
+    });
+    identity.save(function(err){
+      if(err){
+        console.log(err);
+      }else{
+        res.render('home', {signUpfName: signUpfName, signUplName: signUplName, signUpEmail: signUpEmail});
+      };
+    });
+  });
+  
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.get('/login', function(req, res){
+    res.render('login');
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Login page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 app.get('/', function(req, res){
-
-    // Fetch products from API START
     
-    // var options = {
-    //     method: "GET",
-    //     hostname: "dummyjson.com",
-    //     path: "/products?limit=100",
-    //   };
-    //   var req = https.request(options, function (response) {
-    //     var chunks = [];
-      
-    //     response.on("data", function (chunk) {
-    //       chunks.push(chunk);
-    //     });
-      
-    //     response.on("end", function (chunk) {
-    //       var body = Buffer.concat(chunks);
-    //       let body1 = body.toString();
-    //       let body2 = JSON.parse(body1);
-    //     //   console.log(body1);
-    //     //   console.log(body2);      
-            
-    //       res.render('home', {body2: body2});
-
-
-    //     });
-      
-    //     response.on("error", function (error) {
-    //       console.error(error);
-          
-    //     });
-    //   });
-    
-    //   req.end();
-    
-    // Fetch products from API END
-    
-    
-// var options = {
-//     method: "GET",
-//     hostname: "fakestoreapi.com",
-//     path: "/products",
-//   };
-//   var req = https.request(options, function (response) {
-//     var chunks = [];
-
-//     response.on("data", function (chunk) {
-//       chunks.push(chunk);
-//     });
-
-//     response.on("end", function (chunk) {
-//       var body = Buffer.concat(chunks);
-//       let body1 = body.toString();
-//       let body2 = JSON.parse(body1);
-//       console.log(body1);
-//     //   const offers = body2.data.offers;
-//     //   console.log(body2);
-
-        
-//     });
-
-//     response.on("error", function (error) {
-//       console.error(error);
-//     //   let error2 = error;
-//     //   res.redirect('error', {error2: error2});
-//     console.log(error);
-//     });
-//   });
-    
-//   req.end();
-    
-
-
     
     // Fetch products from Database START
 
@@ -171,7 +164,7 @@ app.post('/getProducts', async (req, res) => {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/search', function(req, res){
+app.post('/products', function(req, res){
     
     let searchedProduct = req.body.searchProduct;
     searchedProduct = searchedProduct.toLowerCase();
@@ -194,8 +187,8 @@ app.post('/search', function(req, res){
                     }
                     
                 }
-                res.render('products', {foundItemsNew: foundItemsNew})
                 // console.log(foundItemsNew);
+                res.render('products', {foundItemsNew: foundItemsNew})
             }
         }else{
 
@@ -213,8 +206,10 @@ app.post('/search', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/categories', function(req, res){
+app.post('/products-categories', function(req, res){
   
+    
+
     function findDB(categoryName){
         Techitem.find({category: categoryName}, function(err, foundItemsNew){
             if(err){
@@ -310,10 +305,14 @@ app.post('/categories', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/product-details', function(req, res){
+app.post('/products-:productName', function(req, res){
+    
+
+    let parameterName = req.body.productTitleForParam;
+    req.params.productName = parameterName;
+
     const selectedProductID =  req.body.productID;
     const selectedProductCategoroy =  req.body.productCategory;
-    // console.log(selectedProductID);
 
 
     Techitem.find({category: selectedProductCategoroy}, function(error, foundInfoAll){
@@ -335,6 +334,27 @@ app.post('/product-details', function(req, res){
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+app.post('/custom', function(req, res) {
+    
+    const btnsNav = req.body.btnsNav;
+    
+    if(btnsNav === 'logo'){
+
+        res.redirect('/');
+
+    }else if (btnsNav === 'login') {
+
+        res.redirect('/login');
+
+    };
+});
+
+
 
 
 

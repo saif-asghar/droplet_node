@@ -43,41 +43,30 @@
 
     <body>
 
-
         <!--NAVIGATION-->
         <nav>
             <div class="topnav" id="myTopnav">
-                <a href="#home" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></a>
-                <a href="#" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</a>
-                <a href="#" class="animate">Sign Up</a>
-                <a href="#about" class="animate">Log In</a>
-                <div style="position: absolute; width: 60%; left: 15%;">
-                    <form action="/search" method="post">
+                
+                <form action="/custom" method="post">
+                    <button name="btnsNav" value="logo" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></button>
+                    <button value="cart" name="btnsNav" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
+                    <!-- <button name="btnsNav" value="signup" class="animate">Sign Up</button> -->
+                    <button name="btnsNav" value="login" class="animate">Log In</button>
+                </form>
+                    
+                    <div style="position: absolute; width: 70%; left: 15%;">
+                        <form action="/products" method="post">
                         <input placeholder="search here..." autocomplete="off" onkeyup="sendData(this)" name="searchProduct" class="search-bar-input" type="text">
-                        <button class="fa fa-search search-bar-icon"></button>
+                        <button class="search-bar-icon"><i class="fa fa-search" style="font-size: 20px"></i></button>
                         <div id="searchResults"></div>
                     </form>
                 </div>
                 <!-- <a href="#" id="active" class="animate">Home</a> -->
                 <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="NavBar()">&#9776;</a>
             </div>
-            
-            <!-- <div id="navbar">
-                <a href="#home" id="logo2"><img src="./pics/logoCorrect.jpg" alt="LOGO"></a>
-                <a href="#" class="animate"><i class="fa fa-cart-plus"></i>Cart</a>
-                <a href="#" class="animate">Sign Up</a>
-                <a href="#about" class="animate">Log In</a>
-                <div style="position: relative;">
-                    <form action="/search" method="post">
-                        <input placeholder="search here..." autocomplete="off" onkeyup="sendData(this)" name="searchProduct" class="search-bar-input" type="text">
-                        <button class="fa fa-search search-bar-icon"></button>
-                        
-                    </form>
-                </div>
-            </div> -->
         </nav>
 
-
+    
 
 
 

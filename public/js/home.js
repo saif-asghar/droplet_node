@@ -1,29 +1,3 @@
-//TOP NAVIGATION START
-
-// function NavBar() {
-//     var x = document.getElementById("myTopnav");
-//     if (x.className === "topnav") {
-//     x.className += " responsive";
-//     } else {
-//     x.className = "topnav";
-//     }
-//     }
-//     window.onscroll = function() {scrollFunction()};
-//     function scrollFunction() {
-//     if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-//     document.getElementById("navbar").style.top = "0";
-//     document.getElementById("roll_back").style.display = "flex";
-//     } else {
-//     // document.getElementById("navbar").style.top = "-100px";
-//     // document.getElementById("roll_back").style.display = "none";
-//     }
-// }
-
-//TOP NAVIGATION END
-
-
-
-
 
 //MAIN SLIDER START
 
@@ -74,18 +48,20 @@ myfunc();
 
 
 
-// Fetching Products Data From Fetch Api Method if Needed START
+//CART BUTTON REDIRECTIONS START
 
-// fetch('https://dummyjson.com/products')
-//     .then(res => res.json())
-//     .then(console.log);
+const cartBtn = document.getElementById('cart');
+const loginBtn = document.getElementById('loginBtn');
 
-// Fetching Products Data From Fetch Api Method if Needed END
+cartBtn.addEventListener('click', function(){
+    if(loginBtn.innerHTML === 'Log In'){
+        alert('Please Login First to see your Cart')
+    }else{
+        window.location = '/login';
+    }
+})
 
-
-
-
-
+//CART BUTTON REDIRECTIONS END
 
 
 

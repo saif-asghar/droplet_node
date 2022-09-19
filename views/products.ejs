@@ -4,7 +4,7 @@
 
 
 
-        <form action="/categories" method="post">
+        <form action="/products-categories" method="post">
         <!-- Sort bar -->
         <div class="container">
             <ul class="nav nav-tabs">
@@ -57,7 +57,8 @@
 
                     <%if(foundItemsNew.length > 0){%>
                         <%for (const product of Object.entries(foundItemsNew)){%>
-                            <form class="col-lg-3" action="/product-details" method="post">
+                            <form class="col-lg-3" action="/products-<%= (product[1].title).toLowerCase() %>" method="post">
+                                <input type="text" style="display: none;" name="productTitleForParam" value="<%= (product[1].title).toLowerCase() %>">
                         <!-- Product Card -->
                         <div id="productCard">
                             <div class="product_card">
