@@ -47,7 +47,7 @@
         <!--NAVIGATION-->
         <nav>
             <div class="topnav" id="myTopnav">
-                <form action="/custom" method="post">
+                <form action="/custom-user" method="post">
                     <button name="btnsNav" value="logo" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></button>
                     <button type="button" id="cart" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
                     <!-- <button name="btnsNav" value="signup" class="animate">Sign Up</button> -->
@@ -224,6 +224,7 @@
                     </div>
                 </div>
                     </div>
+                    <input type="text" style="display: none;" name="userEmail3" value="<%= signUpEmail %>">
                 </form>
                     <div style="position: absolute; width: 60%; left: 15%;">
                         <form action="/products-user" method="post">

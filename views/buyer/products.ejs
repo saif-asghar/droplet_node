@@ -47,7 +47,7 @@
         <nav>
             <div class="topnav" id="myTopnav">
                 
-                <form action="/custom" method="post">
+                <form action="/custom-user" method="post">
                     <button name="btnsNav" value="logo" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></button>
                     <button type="button" id="cart" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
                     <!-- <button name="btnsNav" value="signup" class="animate">Sign Up</button> -->
@@ -224,12 +224,14 @@
                     </div>
                 </div>
                     </div>
+                    <input type="text" style="display: none;" name="userEmail3" value="<%= signUpEmail %>">
                 </form>
                     <div style="position: absolute; width: 60%; left: 15%;">
-                    <form action="/products" method="post">
+                    <form action="/products-user" method="post">
                         <input placeholder="search here..." autocomplete="off" onkeyup="sendData(this)" name="searchProduct" class="search-bar-input" type="text">
                         <button type="submit" class="search-bar-icon"><i class="fa fa-search" style="font-size: 20px"></i></button>
                         <div id="searchResults"></div>
+                        <input type="text" style="display: none;" name="userEmail" value="<%= signUpEmail %>">
                     </form>
                 </div>
                 <!-- <a href="#" id="active" class="animate">Home</a> -->
@@ -242,7 +244,8 @@
 
 
 
-        <form action="/products-categories" method="post">
+        <form action="/products-categories-user" method="post">
+            <input type="text" style="display: none;" name="userEmail2" value="<%= signUpEmail %>">
         <!-- Sort bar -->
         <div class="container">
             <ul class="nav nav-tabs">
@@ -295,8 +298,8 @@
 
                     <%if(foundItemsNew.length > 0){%>
                         <%for (const product of Object.entries(foundItemsNew)){%>
-                            <form class="col-lg-3" action="/products-<%= (product[1].title).toLowerCase() %>" method="post">
-                                <input type="text" style="display: none;" name="productTitleForParam" value="<%= (product[1].title).toLowerCase() %>">
+                            <form class="col-lg-3" action="/products-user-<%= (product[1].title).toLowerCase() %>" method="post">
+                                <input type="text" style="display: none;" name="productTitleForParam2" value="<%= (product[1].title).toLowerCase() %>">
                         <!-- Product Card -->
                         <div id="productCard">
                             <div class="product_card">
@@ -341,6 +344,7 @@
                         <div style="display: none;">
                             <input type="text" name="productID" value="<%= product[1]._id %>">
                             <input type="text" name="productCategory" value="<%= product[1].category %>">
+                            <input type="text" style="display: none;" name="userEmail4" value="<%= signUpEmail %>">
                         </div>
                         <!-- /Product Card -->
                     </form>
