@@ -552,6 +552,131 @@ app.post('/products-categories', function(req, res){
 
 
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/products-categories-user', function(req, res){
+  
+    const signUpEmail = req.body.userEmail2;
+    
+
+    function findDB(categoryName){
+        Techitem.find({category: categoryName}, function(err, foundItemsNew){
+            if(err){
+                console.log(err);
+            }else{
+                
+
+                buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+                    if(err){
+                        console.log('error in part 1' + err);
+                    }else{
+                        if(foundUser){
+                            
+                  
+                              const signUpfName = foundUser.fname;
+                              const signUplName = foundUser.lname;
+                              const signUpEmail = foundUser.email;
+              
+                              res.render('buyer/products', 
+                              {
+                                  foundItemsNew: foundItemsNew,
+                                  signUpfName: signUpfName,
+                                  signUplName: signUplName,
+                                  signUpEmail: signUpEmail
+                              })
+              
+                            
+                          }else{
+                            console.log('user not found (deleted I guess)');
+                          }
+                    }
+                })
+            }
+        })
+    }
+
+    
+    const category = req.body.btnCategory;
+    console.log(category);
+
+
+    if(category === 'tech'){
+        findDB(['smartphones', 'laptops']);
+    }else if(category === 'skinCare'){
+        findDB(['skincare']);
+    }else if(category === 'fragrances'){
+        findDB(['fragrances']);
+    }else if(category === 'womensDress'){
+        findDB(['womens-dresses']);
+    }else if(category === 'decor'){
+        findDB(['home-decoration']);
+    }else if(category === 'shoes'){
+        findDB(['mens-shoes', 'womens-shoes']);
+    }
+    else if(category === 'all'){
+        Techitem.find({}, function(err, foundItemsNew){
+            if(err){
+                console.log(err);
+            }else{
+                // console.log(foundItems);
+                res.render('guest/products', {foundItemsNew: foundItemsNew})
+            }
+        })   
+    }
+    else if(category === 'smartphones'){
+        findDB(['smartphones']);
+    }
+    else if(category === 'laptops'){
+        findDB(['laptops']);
+    }
+    else if(category === 'groceries'){
+        findDB(['groceries']);
+    }
+    else if(category === 'furniture'){
+        findDB(['furniture']);
+    }
+    else if(category === 'tops'){
+        findDB(['tops']);
+    }
+    else if(category === 'mensShirts'){
+        findDB(['mens-shirts']);
+    }
+    else if(category === 'mensShoes'){
+        findDB(['mens-shoes']);
+    }
+    else if(category === 'mensWatches'){
+        findDB(['mens-watches']);
+    }
+    else if(category === 'womensWatches'){
+        findDB(['womens-watches']);
+    }
+    else if(category === 'womensBags'){
+        findDB(['womens-bags']);
+    }
+    else if(category === 'womensJewellery'){
+        findDB(['womens-jewellery']);
+    }
+    else if(category === 'sunglasses'){
+        findDB(['sunglasses']);
+    }
+    else if(category === 'automotive'){
+        findDB(['automotive']);
+    }
+    else if(category === 'motorcycle'){
+        findDB(['motorcycle']);
+    }
+    else if(category === 'lighting'){
+        findDB(['lighting']);
+    }
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 app.post('/products-:productName', function(req, res){
