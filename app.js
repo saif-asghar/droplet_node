@@ -725,6 +725,7 @@ app.post('/products-:productName', function(req, res){
                 }else{
                     // console.log(foundInfo[0].raring);
                     // console.log(foudInfoAll[1]._id);
+                    console.log('yaha hai');
                     res.render('guest/productDetail', {foundInfo: foundInfo, foundInfoAll: foundInfoAll})
                 }
             })
@@ -741,7 +742,7 @@ app.post('/products-:productName', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products-user-:productName2', function(req, res){
+app.post('/product-user-:productName2', function(req, res){
     
     const signUpEmail = req.body.userEmail4;
     let parameterName = req.body.productTitleForParam2;
@@ -773,6 +774,7 @@ app.post('/products-user-:productName2', function(req, res){
                                   const signUplName = foundUser.lname;
                                   const signUpEmail = foundUser.email;
                   
+                                //   console.log('sahi hai');
                                   res.render('buyer/productDetail2', {
                                     foundInfo: foundInfo,
                                     signUpfName: signUpfName,

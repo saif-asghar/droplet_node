@@ -298,7 +298,7 @@
 
                     <%if(foundItemsNew.length > 0){%>
                         <%for (const product of Object.entries(foundItemsNew)){%>
-                            <form class="col-lg-3" action="/products-user-<%= (product[1].title).toLowerCase() %>" method="post">
+                            <form class="col-lg-3" action="/product-user-<%= (product[1].title).toLowerCase() %>" method="post">
                                 <input type="text" style="display: none;" name="productTitleForParam2" value="<%= (product[1].title).toLowerCase() %>">
                         <!-- Product Card -->
                         <div id="productCard">
