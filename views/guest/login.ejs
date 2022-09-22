@@ -37,17 +37,17 @@
             </div>
 
             
-            <div class="cont">
-                <form action="/login" method="post">
+            <div id="contBuyer" class="cont">
+                <form action="/login-buyer" method="post">
                     <div class="form sign-in">
-                        <h2>Welcome back,</h2>
+                        <h2>Welcome back, Customer</h2>
                         <label>
                             <span>Email</span>
-                            <input name="loginEmail" type="email">
+                            <input required name="loginEmail" type="email">
                         </label>
                         <label>
                             <span>Password</span>
-                            <input name="loginPass" type="password">
+                            <input name="loginPass" required type="password">
                         </label>
                         <p class="forgot-pass">Forgot password?</p>
                         <button type="submit" class="submit">Sign In</button>
@@ -68,24 +68,24 @@
                             <span class="m--in">Sign In</span>
                         </div>
                     </div>
-                    <form action="/signup" method="post">
+                    <form action="/signup-buyer" method="post">
                         <div class="form sign-up">
                             <h2>Time to feel like home,</h2>
                             <label>
                                 <span>First Name</span>
-                                <input name="signupfName" type="text">
+                                <input name="signupfName" required type="text">
                             </label>
                             <label>
                                 <span>Last Name</span>
-                                <input name="signuplName" type="text">
+                                <input name="signuplName" required type="text">
                             </label>
                             <label>
                                 <span>Email</span>
-                                <input name="signupEmail" type="email">
+                                <input name="signupEmail" required type="email">
                             </label>
                             <label>
                                 <span>Password</span>
-                                <input name="signupPass" type="password">
+                                <input name="signupPass" required type="password">
                             </label>
                             <button type="submit" class="submit">Sign Up</button>
                         </div>
@@ -94,10 +94,10 @@
             </div>
 
             
-            <div class="cont">
-                <form action="/login" method="post">
+            <div id="contSeller" style="display: none;" class="cont">
+                <form action="/login-seller" method="post">
                     <div class="form sign-in">
-                        <h2>Welcome back,</h2>
+                        <h2>Welcome back, Seller</h2>
                         <label>
                             <span>Email</span>
                             <input name="loginEmail" type="email">
@@ -125,7 +125,7 @@
                             <span class="m--in">Sign In</span>
                         </div>
                     </div>
-                    <form action="/signup" method="post">
+                    <form action="/signup-seller" method="post">
                         <div class="form sign-up">
                             <h2>Time to feel like home,</h2>
                             <label>

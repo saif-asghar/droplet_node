@@ -43,7 +43,8 @@ const signupSchema = new mongoose.Schema({
   password: String,
 });
 
-const Identification = mongoose.model("Identification", signupSchema);
+const buyerID = mongoose.model("buyerID", signupSchema);
+const sellerID = mongoose.model("sellerID", signupSchema);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -72,44 +73,6 @@ const techitemScehma = new mongoose.Schema({
   const Techitem = mongoose.model("Techitem", techitemScehma);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                          { Product Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
-
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-app.post('/signup', function(req, res){
-  
-    const foundItems = req.body.foundItems;
-    
-    const signUpfName = req.body.signupfName;
-    const signUplName = req.body.signuplName;
-    const signUpEmail = req.body.signupEmail;
-    const signUpPass = req.body.signupPass;
-  
-    const identity = new Identification({
-      fname: signUpfName,
-      lname: signUplName,
-      email: signUpEmail,
-      password: md5(signUpPass),
-    });
-    identity.save(function(err){
-      if(err){
-        console.log(err);
-      }else{
-        res.render('buyer/home', 
-        {
-            signUpfName: signUpfName, 
-            signUplName: signUplName, 
-            signUpEmail: signUpEmail,
-            foundItems: foundItems
-        });
-      };
-    });
-  });
-  
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
 
 
@@ -128,17 +91,162 @@ app.get('/login', function(req, res){
 
 
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/signup-buyer', function(req, res){
+  
+    
+    
+    const signUpfName = req.body.signupfName;
+    const signUplName = req.body.signuplName;
+    const signUpEmail = req.body.signupEmail;
+    const signUpPass = req.body.signupPass;
+  
+    
+    
+    
+    const identity = new buyerID({
+      fname: signUpfName,
+      lname: signUplName,
+      email: signUpEmail,
+      password: md5(signUpPass),
+    });
+    
+    identity.save(function(err){
+      if(err){
+        console.log(err);
+      }else{
+
+
+
+        Techitem.find({}, function(err, foundItems){
+            if(err){
+                console.log(err);
+            }else{
+                // console.log(foundItems);
+                res.render('buyer/home', 
+                {
+                    foundItems: foundItems,
+                    signUpfName: signUpfName,
+                    signUplName: signUplName,
+                    signUpEmail: signUpEmail
+                })
+            }
+        })
+
+
+
+      };
+    });
+  });
+  
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/login', function(req, res){
+app.post('/login-buyer', function(req, res){
     
     const loginEmail = req.body.loginEmail;
     const loginPass = md5(req.body.loginPass);
 
     
-    Identification.findOne({email: loginEmail}, function(err, foundUser){
+    buyerID.findOne({email: loginEmail}, function(err, foundUser){
+        if(err){
+          console.log(err)
+        }else{
+            if(foundUser){
+              if(foundUser.password === loginPass){
+    
+                const signUpfName = foundUser.fname;
+                const signUplName = foundUser.lname;
+                const signUpEmail = loginEmail;
+
+                Techitem.find({}, function(err, foundItems){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        // console.log(foundItems);
+                        res.render('buyer/home', 
+                        {
+                            foundItems: foundItems,
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail
+                        })
+                    }
+                })
+
+              }else{
+                console.log('incorrect pass');
+              }
+            }else{
+              console.log('incorrect email');
+            }
+          }
+        });
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/signup-seller', function(req, res){
+  
+    const foundItems = req.body.foundItems;
+    
+    const signUpfName = req.body.signupfName;
+    const signUplName = req.body.signuplName;
+    const signUpEmail = req.body.signupEmail;
+    const signUpPass = req.body.signupPass;
+  
+    const identity = new sellerID({
+      fname: signUpfName,
+      lname: signUplName,
+      email: signUpEmail,
+      password: md5(signUpPass),
+    });
+    identity.save(function(err){
+      if(err){
+        console.log(err);
+      }else{
+        res.render('seller/home', 
+        {
+            signUpfName: signUpfName, 
+            signUplName: signUplName, 
+            signUpEmail: signUpEmail,
+            foundItems: foundItems
+        });
+      };
+    });
+  });
+  
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/login-seller', function(req, res){
+    
+    const loginEmail = req.body.loginEmail;
+    const loginPass = md5(req.body.loginPass);
+
+    
+    sellerID.findOne({email: loginEmail}, function(err, foundUser){
         if(err){
           console.log(err)
         }else{
@@ -149,7 +257,8 @@ app.post('/login', function(req, res){
                 const signUplName = foundUser.lname;
                 const signUpEmail = loginEmail;
     
-                res.redirect('/');
+
+                res.render('seller/home');
               }else{
                 console.log('incorrect pass');
               }
@@ -240,6 +349,99 @@ app.post('/products', function(req, res){
         }else{
 
             res.render('guest/products', {foundItemsNew: foundItemsNew});
+
+        }
+    })
+
+}); 
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/products-user', function(req, res){
+    
+    let searchedProduct = req.body.searchProduct;
+    searchedProduct = searchedProduct.toLowerCase();
+    const signUpEmail = req.body.userEmail;
+    
+    Techitem.find({}, function(err, foundItems){
+        
+        let foundItemsNew = [];
+
+        if(searchedProduct.length > 0 ){
+            if(err){
+                console.log('error in part 0' + err);
+            }else{
+                
+                
+
+                for(const item of foundItems){
+                    
+                    if(item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)){
+                        foundItemsNew.push(item);
+                    }
+                    
+                }
+                
+                buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+                    if(err){
+                        console.log('error in part 1' + err);
+                    }else{
+                        if(foundUser){
+                            
+                  
+                              const signUpfName = foundUser.fname;
+                              const signUplName = foundUser.lname;
+                              const signUpEmail = foundUser.email;
+              
+                              res.render('buyer/products', 
+                              {
+                                  foundItemsNew: foundItemsNew,
+                                  signUpfName: signUpfName,
+                                  signUplName: signUplName,
+                                  signUpEmail: signUpEmail
+                              })
+              
+                            
+                          }else{
+                            console.log('user not found (deleted I guess)');
+                          }
+                    }
+                })
+            }
+        }else{
+
+            buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+                if(err){
+                    console.log(err);
+                }else{
+                    if(foundUser){
+                        
+              
+                          const signUpfName = foundUser.fname;
+                          const signUplName = foundUser.lname;
+                          const signUpEmail = foundUser.email;
+          
+                          res.render('buyer/products', 
+                          {
+                              foundItemsNew: foundItemsNew,
+                              signUpfName: signUpfName,
+                              signUplName: signUplName,
+                              signUpEmail: signUpEmail
+                          })
+          
+                        
+                      }else{
+                        console.log('user not found (deleted I guess)');
+                      }
+                }
+            })
 
         }
     })
