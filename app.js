@@ -868,11 +868,40 @@ app.post('/custom-user', function(req, res) {
               }
             });
 
+    }else if(btnsNav === 'cart'){
+        
+        
+
+        buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+            if(err){
+              console.log(err)
+            }else{
+                if(foundUser){
+                  
+        
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const signUpEmail = foundUser.email;
+            
+                    res.render('buyer/cart', 
+                    {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail
+                    })
+                    
+                    
+    
+                  
+                }else{
+                  console.log('user deleted i guess');
+                }
+              }
+            });
+            
     }
 });
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
 
 
 
