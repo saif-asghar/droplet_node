@@ -725,7 +725,7 @@ app.post('/products-:productName', function(req, res){
                 }else{
                     // console.log(foundInfo[0].raring);
                     // console.log(foudInfoAll[1]._id);
-                    console.log('yaha hai');
+                    // console.log('yaha hai');
                     res.render('guest/productDetail', {foundInfo: foundInfo, foundInfoAll: foundInfoAll})
                 }
             })
