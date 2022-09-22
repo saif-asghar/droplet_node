@@ -49,9 +49,13 @@
     height: 33px;
     margin-left: 1px;
   }
+  .menu-bar hr{
+    background-color: black !important;
+  }
   #navdrop .drop-btn p {
     color: black;
     font-weight: 300;
+    margin-top: 16px;
     padding: 0 12px 0 0;
     font-size: 20px;
   }
