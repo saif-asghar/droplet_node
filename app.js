@@ -618,8 +618,33 @@ app.post('/products-categories-user', function(req, res){
             if(err){
                 console.log(err);
             }else{
-                // console.log(foundItems);
-                res.render('guest/products', {foundItemsNew: foundItemsNew})
+                
+                buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+                    if(err){
+                        console.log('error in part 1' + err);
+                    }else{
+                        if(foundUser){
+                            
+                  
+                              const signUpfName = foundUser.fname;
+                              const signUplName = foundUser.lname;
+                              const signUpEmail = foundUser.email;
+              
+                              res.render('buyer/products', 
+                              {
+                                  foundItemsNew: foundItemsNew,
+                                  signUpfName: signUpfName,
+                                  signUplName: signUplName,
+                                  signUpEmail: signUpEmail
+                              })
+              
+                            
+                          }else{
+                            console.log('user not found (deleted I guess)');
+                          }
+                    }
+                })
+
             }
         })   
     }
@@ -713,6 +738,70 @@ app.post('/products-:productName', function(req, res){
 
 
 
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/products-user-:productName2', function(req, res){
+    
+    const signUpEmail = req.body.userEmail4;
+    let parameterName = req.body.productTitleForParam2;
+    req.params.productName2 = parameterName;
+
+    const selectedProductID =  req.body.productID;
+    const selectedProductCategoroy =  req.body.productCategory;
+
+
+    Techitem.find({category: selectedProductCategoroy}, function(error, foundInfoAll){
+
+        if(error){
+            console.log(error)
+        }else{
+            Techitem.find({_id: selectedProductID}, function(err, foundInfo){
+                if(err){
+                    console.log(err);
+                }else{
+                    
+
+                    buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+                        if(err){
+                            console.log('error in part 1' + err);
+                        }else{
+                            if(foundUser){
+                                
+                      
+                                  const signUpfName = foundUser.fname;
+                                  const signUplName = foundUser.lname;
+                                  const signUpEmail = foundUser.email;
+                  
+                                  res.render('buyer/productDetail2', {
+                                    foundInfo: foundInfo,
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail,
+                                    foundInfoAll: foundInfoAll
+                                })
+                  
+                                
+                              }else{
+                                console.log('user not found (deleted I guess)');
+                              }
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 app.post('/custom', function(req, res) {
     
     const btnsNav = req.body.btnsNav;
@@ -727,6 +816,59 @@ app.post('/custom', function(req, res) {
 
     };
 });
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/custom-user', function(req, res) {
+    
+    const btnsNav = req.body.btnsNav;
+    const signUpEmail = req.body.userEmail3;
+
+
+    if(btnsNav === 'logo'){
+
+        
+
+        buyerID.findOne({email: signUpEmail}, function(err, foundUser){
+            if(err){
+              console.log(err)
+            }else{
+                if(foundUser){
+                  
+        
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const signUpEmail = foundUser.email;
+    
+                    Techitem.find({}, function(err, foundItems){
+                        if(err){
+                            console.log(err);
+                        }else{
+                            // console.log(foundItems);
+                            res.render('buyer/home', 
+                            {
+                                foundItems: foundItems,
+                                signUpfName: signUpfName,
+                                signUplName: signUplName,
+                                signUpEmail: signUpEmail
+                            })
+                        }
+                    })
+    
+                  
+                }else{
+                  console.log('incorrect email');
+                }
+              }
+            });
+
+    }
+});
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 
