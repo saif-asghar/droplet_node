@@ -3,6 +3,25 @@
     left: 76%;
 }
 
+.hiddenDplay{
+  display: none;
+}
+
+#randomP{
+  transition: 1s;
+  width: 400px;
+  color: white;
+  padding: 10px 40px;
+  border: 1px solid #BAD7DF;
+  border-radius: 5px;
+  background-color: #BAD7DF;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 100;
+}
+
 .persons-usersname{
     margin-bottom: 0 !important;
     font-size: 16px !important;
