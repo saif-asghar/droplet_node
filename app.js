@@ -34,42 +34,6 @@ app.set("view engine", "ejs");
 
 
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                4. { ID Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-const signupSchema = new mongoose.Schema({
-  fname: {
-    type: String,
-    required: true
-  },
-  lname: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  cart: [
-    {
-        product: String
-    }
-  ]
-});
-
-const buyerID = mongoose.model("buyerID", signupSchema);
-// const sellerID = mongoose.model("sellerID", signupSchema);
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
-
-
-
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { Product Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -90,6 +54,40 @@ const techitemScehma = new mongoose.Schema({
   const Techitem = mongoose.model("Techitem", techitemScehma);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                          { Product Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                4. { ID Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+const signupSchema = new mongoose.Schema({
+  fname: {
+    type: String,
+    required: true
+  },
+  lname: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  cart: [
+    techitemScehma
+  ]
+});
+
+const buyerID = mongoose.model("buyerID", signupSchema);
+// const sellerID = mongoose.model("sellerID", signupSchema);
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
 
 
@@ -344,15 +342,30 @@ app.post('/add-to-cart', function(req, res) {
     let productID = req.body.productID;
     let userEmail = req.body.userEmail;
 
-    cartProducts.push({productID});
+    console.log(productID);
 
-    buyerID.updateOne({email: userEmail}, {cart: cartProducts}, function(err){
-        if(err){
-            console.log(err)
+
+    Techitem.findOne({_id: productID}, function(error, foundProduct){
+        if(error){
+            console.log(error)
         }else{
-            console.log('product added to cart successfully');
+            if(foundProduct){
+                cartProducts.push(foundProduct);
+                // console.log(cartProducts);
+
+                buyerID.updateOne({email: userEmail}, {cart: cartProducts}, function(err){
+                    if(err){
+                        console.log(err)
+                    }else{
+                        console.log('product added to cart successfully');
+                    }
+                })
+
+            }
         }
     })
+
+    
 
     res.send({response: 'product added to cart successfully'});
     
@@ -928,12 +941,15 @@ app.post('/custom-user', function(req, res) {
                     const signUpfName = foundUser.fname;
                     const signUplName = foundUser.lname;
                     const signUpEmail = foundUser.email;
+                    const cart = foundUser.cart;
+                    
             
                     res.render('buyer/cart', 
                     {
                         signUpfName: signUpfName,
                         signUplName: signUplName,
-                        signUpEmail: signUpEmail
+                        signUpEmail: signUpEmail,
+                        cart: cart
                     })
                     
                     
