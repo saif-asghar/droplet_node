@@ -1,10 +1,20 @@
-$(document).ready(function(){
-    let textBox = document.getElementById("randomP");
+// $(document).ready(function(){
     
-    $(".formForAJAX").on("submit", function(event){
-        event.preventDefault();
-        let userEmail = $("#userEmail").val();
-        let productID = $("#productID").val();
+    
+    
+    
+// })
+let textBox = document.getElementById("randomP");
+
+function addToCart(e){
+    
+    
+    
+    // console.log(productID);
+    
+    let userEmail = $("#userEmail").val();
+    // let productID = $(".productID").val();
+    let productID = e.parentElement.childNodes[1].value;
 
         $.ajax({
             url: "/add-to-cart",
@@ -25,5 +35,5 @@ $(document).ready(function(){
 
             }
         })
-    })
-})
+    
+}
