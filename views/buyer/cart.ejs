@@ -255,32 +255,37 @@
                 <div class="cart_responsive">
           
 
-                  <%for(const product of cart){%>
+                  
 
+                  <%for(const product of Object.entries(cart)){%>
+
+                    
+
+                    
                 
                     <div class="tr_item">
                     <div class="td_item item_img">
-                      <img src="https://i.ibb.co/vQHXcYb/b68912b3426baa0b1f4c410a02174879.jpg" />
+                      <img src="<%= product[1].thumbnail %>">
                     </div>
                     <div class="td_item item_name">
-                      <label class="main">Denim Jacket</label>
-                      <label class="sub">Ref. 007891987</label>
+                      <label class="main"><%= product[1].title %></label>
+                      <label class="sub">Ref. <%= product[1].id %></label>
                     </div>
                     <div class="td_item item_color">
-                      <label>Blue</label>
+                      <label><%= product[1].brand %></label>
                     </div>
                     <div class="td_item item_qty">
                       <select>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="more">More</option>
+      
+                        
+                        <%for(i = 0; i <= product[1].stock; i++){%>
+                          <option value="<%= [i + 1] %>"><%= [i + 1] %></option>
+                        <%}%>
+
                       </select>
                     </div>
                     <div class="td_item item_price">
-                      <label>$ 260.00</label>
+                      <label>$ <%= product[1].price %></label>
                     </div>
                     <div class="td_item item_remove">
                       <span class="material-icons-outlined">close</span>
