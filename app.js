@@ -3,11 +3,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const https = require("https");
+const http = require("http");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const _ = require('lodash');
 const { escapeRegExp } = require("lodash");
 const md5 = require('md5');
+const reload = require('reload');
 require("./conn/db");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by NodeJs END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -26,6 +28,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
+// app.set('port', process.env.PORT || 3000)
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by APP END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -49,9 +52,9 @@ const techitemScehma = new mongoose.Schema({
     category: String,
     thumbnail: String,
     images: Array,
-  });
-  
-  const Techitem = mongoose.model("Techitem", techitemScehma);
+});
+
+const Techitem = mongoose.model("Techitem", techitemScehma);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                          { Product Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -63,32 +66,32 @@ const techitemScehma = new mongoose.Schema({
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                4. { ID Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 const signupSchema = new mongoose.Schema({
-  fname: {
-    type: String,
-    required: true
-  },
-  lname: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  cart: [
-    techitemScehma
-  ]
+    fname: {
+        type: String,
+        required: true
+    },
+    lname: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    cart: [
+        techitemScehma
+    ]
 });
 
 const buyerID = mongoose.model("buyerID", signupSchema);
 // const sellerID = mongoose.model("sellerID", signupSchema);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  
+
 
 
 
@@ -96,7 +99,7 @@ const buyerID = mongoose.model("buyerID", signupSchema);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.get('/login', function(req, res){
+app.get('/login', function (req, res) {
     res.render('guest/login');
 })
 
@@ -108,53 +111,53 @@ app.get('/login', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/signup-buyer', function(req, res){
-  
-    
-    
+app.post('/signup-buyer', function (req, res) {
+
+
+
     const signUpfName = req.body.signupfName;
     const signUplName = req.body.signuplName;
     const signUpEmail = req.body.signupEmail;
     const signUpPass = req.body.signupPass;
-  
-    
-    
-    
+
+
+
+
     const identity = new buyerID({
-      fname: signUpfName,
-      lname: signUplName,
-      email: signUpEmail,
-      password: md5(signUpPass),
+        fname: signUpfName,
+        lname: signUplName,
+        email: signUpEmail,
+        password: md5(signUpPass),
     });
-    
-    identity.save(function(err){
-      if(err){
-        console.log(err);
-      }else{
+
+    identity.save(function (err) {
+        if (err) {
+            console.log(err);
+        } else {
 
 
 
-        Techitem.find({}, function(err, foundItems){
-            if(err){
-                console.log(err);
-            }else{
-                // console.log(foundItems);
-                res.render('buyer/home', 
-                {
-                    foundItems: foundItems,
-                    signUpfName: signUpfName,
-                    signUplName: signUplName,
-                    signUpEmail: signUpEmail
-                })
-            }
-        })
+            Techitem.find({}, function (err, foundItems) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    // console.log(foundItems);
+                    res.render('buyer/home',
+                        {
+                            foundItems: foundItems,
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail
+                        })
+                }
+            })
 
 
 
-      };
+        };
     });
-  });
-  
+});
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -165,46 +168,46 @@ app.post('/signup-buyer', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/login-buyer', function(req, res){
-    
+app.post('/login-buyer', function (req, res) {
+
     const loginEmail = req.body.loginEmail;
     const loginPass = md5(req.body.loginPass);
 
-    
-    buyerID.findOne({email: loginEmail}, function(err, foundUser){
-        if(err){
-          console.log(err)
-        }else{
-            if(foundUser){
-              if(foundUser.password === loginPass){
-    
-                const signUpfName = foundUser.fname;
-                const signUplName = foundUser.lname;
-                const signUpEmail = loginEmail;
 
-                Techitem.find({}, function(err, foundItems){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        // console.log(foundItems);
-                        res.render('buyer/home', 
-                        {
-                            foundItems: foundItems,
-                            signUpfName: signUpfName,
-                            signUplName: signUplName,
-                            signUpEmail: signUpEmail
-                        })
-                    }
-                })
+    buyerID.findOne({ email: loginEmail }, function (err, foundUser) {
+        if (err) {
+            console.log(err)
+        } else {
+            if (foundUser) {
+                if (foundUser.password === loginPass) {
 
-              }else{
-                console.log('incorrect pass');
-              }
-            }else{
-              console.log('incorrect email');
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const signUpEmail = loginEmail;
+
+                    Techitem.find({}, function (err, foundItems) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            // console.log(foundItems);
+                            res.render('buyer/home',
+                                {
+                                    foundItems: foundItems,
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail
+                                })
+                        }
+                    })
+
+                } else {
+                    console.log('incorrect pass');
+                }
+            } else {
+                console.log('incorrect email');
             }
-          }
-        });
+        }
+    });
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -215,36 +218,36 @@ app.post('/login-buyer', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/signup-seller', function(req, res){
-  
+app.post('/signup-seller', function (req, res) {
+
     const foundItems = req.body.foundItems;
-    
+
     const signUpfName = req.body.signupfName;
     const signUplName = req.body.signuplName;
     const signUpEmail = req.body.signupEmail;
     const signUpPass = req.body.signupPass;
-  
+
     const identity = new sellerID({
-      fname: signUpfName,
-      lname: signUplName,
-      email: signUpEmail,
-      password: md5(signUpPass),
+        fname: signUpfName,
+        lname: signUplName,
+        email: signUpEmail,
+        password: md5(signUpPass),
     });
-    identity.save(function(err){
-      if(err){
-        console.log(err);
-      }else{
-        res.render('seller/home', 
-        {
-            signUpfName: signUpfName, 
-            signUplName: signUplName, 
-            signUpEmail: signUpEmail,
-            foundItems: foundItems
-        });
-      };
+    identity.save(function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render('seller/home',
+                {
+                    signUpfName: signUpfName,
+                    signUplName: signUplName,
+                    signUpEmail: signUpEmail,
+                    foundItems: foundItems
+                });
+        };
     });
-  });
-  
+});
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -255,33 +258,33 @@ app.post('/signup-seller', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/login-seller', function(req, res){
-    
+app.post('/login-seller', function (req, res) {
+
     const loginEmail = req.body.loginEmail;
     const loginPass = md5(req.body.loginPass);
 
-    
-    sellerID.findOne({email: loginEmail}, function(err, foundUser){
-        if(err){
-          console.log(err)
-        }else{
-            if(foundUser){
-              if(foundUser.password === loginPass){
-    
-                const signUpfName = foundUser.fname;
-                const signUplName = foundUser.lname;
-                const signUpEmail = loginEmail;
-    
 
-                res.render('seller/home');
-              }else{
-                console.log('incorrect pass');
-              }
-            }else{
-              console.log('incorrect email');
+    sellerID.findOne({ email: loginEmail }, function (err, foundUser) {
+        if (err) {
+            console.log(err)
+        } else {
+            if (foundUser) {
+                if (foundUser.password === loginPass) {
+
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const signUpEmail = loginEmail;
+
+
+                    res.render('seller/home');
+                } else {
+                    console.log('incorrect pass');
+                }
+            } else {
+                console.log('incorrect email');
             }
-          }
-        });
+        }
+    });
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.POST Login page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -292,17 +295,17 @@ app.post('/login-seller', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.get('/', function(req, res){
-    
-    
+app.get('/', function (req, res) {
+
+
     // Fetch products from Database START
 
-      Techitem.find({}, function(err, foundItems){
-        if(err){
+    Techitem.find({}, function (err, foundItems) {
+        if (err) {
             console.log(err);
-        }else{
+        } else {
             // console.log(foundItems);
-            res.render('guest/home', {foundItems: foundItems})
+            res.render('guest/home', { foundItems: foundItems })
         }
     })
 
@@ -321,10 +324,10 @@ app.get('/', function(req, res){
 
 app.post('/getProducts', async (req, res) => {
     let payload = req.body.payload.trim();
-    let search = await Techitem.find({title: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+    let search = await Techitem.find({ title: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
     //Limit search result to 10
     search = search.slice(0, 10);
-    res.send({payload: search});
+    res.send({ payload: search });
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -337,26 +340,26 @@ app.post('/getProducts', async (req, res) => {
 
 let cartProducts = [];
 
-app.post('/add-to-cart', function(req, res) {
-    
+app.post('/add-to-cart', function (req, res) {
+
     let productID = req.body.productID;
     let userEmail = req.body.userEmail;
 
     console.log(productID);
 
 
-    Techitem.findOne({_id: productID}, function(error, foundProduct){
-        if(error){
+    Techitem.findOne({ _id: productID }, function (error, foundProduct) {
+        if (error) {
             console.log(error)
-        }else{
-            if(foundProduct){
+        } else {
+            if (foundProduct) {
                 cartProducts.push(foundProduct);
                 // console.log(cartProducts);
 
-                buyerID.updateOne({email: userEmail}, {cart: cartProducts}, function(err){
-                    if(err){
+                buyerID.updateOne({ email: userEmail }, { cart: cartProducts }, function (err) {
+                    if (err) {
                         console.log(err)
-                    }else{
+                    } else {
                         console.log('product added to cart successfully');
                     }
                 })
@@ -365,10 +368,91 @@ app.post('/add-to-cart', function(req, res) {
         }
     })
 
-    
 
-    res.send({response: 'product added to cart successfully'});
-    
+
+    res.send({ response: 'product added to cart successfully' });
+
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/remove-product', function (req, res) {
+
+    let productID = req.body.productID;
+    let userEmail = req.body.userEmail;
+
+    console.log(productID, userEmail);
+
+
+    // buyerID.findOneAndUpdate({email: userEmail}, {cart: {_id: productID}}, function(err){
+    //     if(err){
+    //         console.log(err)
+    //     }else{
+    //         console.log('product removed');
+    //     }
+    // })
+
+    // buyerID.update( 
+    //     { "email" : userEmail} , 
+    //     { "$pull" : { "cart" : { "_id" :  productID } } } , 
+    //     { "multi" : true }  
+    // );
+
+    // buyerID.update({cart: { _id: productID }}, { "$pull": { "divers": { "user": userIdToRemove } }}, function(err, obj) {
+    //     //do something smart
+    // });
+
+    let db = 'Ecommerce-Website';
+    buyerID.update(
+        { email: userEmail },
+        { $pull: { cart: {id: productID} } },
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Techitem.findOne({_id: productID}, function(error, foundProduct){
+    //     if(error){
+    //         console.log(error)
+    //     }else{
+    //         if(foundProduct){
+    //             cartProducts.push(foundProduct);
+    //             // console.log(cartProducts);
+
+    //             buyerID.updateOne({email: userEmail}, {cart: cartProducts}, function(err){
+    //                 if(err){
+    //                     console.log(err)
+    //                 }else{
+    //                     console.log('product added to cart successfully');
+    //                 }
+    //             })
+
+    //         }
+    //     }
+    // })
+
+
+
+    // res.send({response: 'product added to cart successfully'});
+
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -379,40 +463,40 @@ app.post('/add-to-cart', function(req, res) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products', function(req, res){
-    
+app.post('/products', function (req, res) {
+
     let searchedProduct = req.body.searchProduct;
     searchedProduct = searchedProduct.toLowerCase();
 
-    Techitem.find({}, function(err, foundItems){
-        
+    Techitem.find({}, function (err, foundItems) {
+
         let foundItemsNew = [];
 
-        if(searchedProduct.length > 0 ){
-            if(err){
+        if (searchedProduct.length > 0) {
+            if (err) {
                 console.log(err);
-            }else{
-                
-                
+            } else {
 
-                for(const item of foundItems){
-                    
-                    if(item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)){
+
+
+                for (const item of foundItems) {
+
+                    if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
                         foundItemsNew.push(item);
                     }
-                    
+
                 }
                 // console.log(foundItemsNew);
-                res.render('guest/products', {foundItemsNew: foundItemsNew})
+                res.render('guest/products', { foundItemsNew: foundItemsNew })
             }
-        }else{
+        } else {
 
-            res.render('guest/products', {foundItemsNew: foundItemsNew});
+            res.render('guest/products', { foundItemsNew: foundItemsNew });
 
         }
     })
 
-}); 
+});
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -423,89 +507,89 @@ app.post('/products', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products-user', function(req, res){
-    
+app.post('/products-user', function (req, res) {
+
     let searchedProduct = req.body.searchProduct;
     searchedProduct = searchedProduct.toLowerCase();
     const signUpEmail = req.body.userEmail;
-    
-    Techitem.find({}, function(err, foundItems){
-        
+
+    Techitem.find({}, function (err, foundItems) {
+
         let foundItemsNew = [];
 
-        if(searchedProduct.length > 0 ){
-            if(err){
+        if (searchedProduct.length > 0) {
+            if (err) {
                 console.log('error in part 0' + err);
-            }else{
-                
-                
+            } else {
 
-                for(const item of foundItems){
-                    
-                    if(item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)){
+
+
+                for (const item of foundItems) {
+
+                    if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
                         foundItemsNew.push(item);
                     }
-                    
+
                 }
-                
-                buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-                    if(err){
+
+                buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+                    if (err) {
                         console.log('error in part 1' + err);
-                    }else{
-                        if(foundUser){
-                            
-                  
-                              const signUpfName = foundUser.fname;
-                              const signUplName = foundUser.lname;
-                              const signUpEmail = foundUser.email;
-              
-                              res.render('buyer/products', 
-                              {
-                                  foundItemsNew: foundItemsNew,
-                                  signUpfName: signUpfName,
-                                  signUplName: signUplName,
-                                  signUpEmail: signUpEmail
-                              })
-              
-                            
-                          }else{
+                    } else {
+                        if (foundUser) {
+
+
+                            const signUpfName = foundUser.fname;
+                            const signUplName = foundUser.lname;
+                            const signUpEmail = foundUser.email;
+
+                            res.render('buyer/products',
+                                {
+                                    foundItemsNew: foundItemsNew,
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail
+                                })
+
+
+                        } else {
                             console.log('user not found (deleted I guess)');
-                          }
+                        }
                     }
                 })
             }
-        }else{
+        } else {
 
-            buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-                if(err){
+            buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+                if (err) {
                     console.log(err);
-                }else{
-                    if(foundUser){
-                        
-              
-                          const signUpfName = foundUser.fname;
-                          const signUplName = foundUser.lname;
-                          const signUpEmail = foundUser.email;
-          
-                          res.render('buyer/products', 
-                          {
-                              foundItemsNew: foundItemsNew,
-                              signUpfName: signUpfName,
-                              signUplName: signUplName,
-                              signUpEmail: signUpEmail
-                          })
-          
-                        
-                      }else{
+                } else {
+                    if (foundUser) {
+
+
+                        const signUpfName = foundUser.fname;
+                        const signUplName = foundUser.lname;
+                        const signUpEmail = foundUser.email;
+
+                        res.render('buyer/products',
+                            {
+                                foundItemsNew: foundItemsNew,
+                                signUpfName: signUpfName,
+                                signUplName: signUplName,
+                                signUpEmail: signUpEmail
+                            })
+
+
+                    } else {
                         console.log('user not found (deleted I guess)');
-                      }
+                    }
                 }
             })
 
         }
     })
 
-}); 
+});
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -514,92 +598,92 @@ app.post('/products-user', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products-categories', function(req, res){
-  
-    
+app.post('/products-categories', function (req, res) {
 
-    function findDB(categoryName){
-        Techitem.find({category: categoryName}, function(err, foundItemsNew){
-            if(err){
+
+
+    function findDB(categoryName) {
+        Techitem.find({ category: categoryName }, function (err, foundItemsNew) {
+            if (err) {
                 console.log(err);
-            }else{
+            } else {
                 // console.log(foundItemsNew);
-                res.render('guest/products', {foundItemsNew: foundItemsNew})
+                res.render('guest/products', { foundItemsNew: foundItemsNew })
             }
         })
     }
 
-    
+
     const category = req.body.btnCategory;
     console.log(category);
 
 
-    if(category === 'tech'){
+    if (category === 'tech') {
         findDB(['smartphones', 'laptops']);
-    }else if(category === 'skinCare'){
+    } else if (category === 'skinCare') {
         findDB(['skincare']);
-    }else if(category === 'fragrances'){
+    } else if (category === 'fragrances') {
         findDB(['fragrances']);
-    }else if(category === 'womensDress'){
+    } else if (category === 'womensDress') {
         findDB(['womens-dresses']);
-    }else if(category === 'decor'){
+    } else if (category === 'decor') {
         findDB(['home-decoration']);
-    }else if(category === 'shoes'){
+    } else if (category === 'shoes') {
         findDB(['mens-shoes', 'womens-shoes']);
     }
-    else if(category === 'all'){
-        Techitem.find({}, function(err, foundItemsNew){
-            if(err){
+    else if (category === 'all') {
+        Techitem.find({}, function (err, foundItemsNew) {
+            if (err) {
                 console.log(err);
-            }else{
+            } else {
                 // console.log(foundItems);
-                res.render('guest/products', {foundItemsNew: foundItemsNew})
+                res.render('guest/products', { foundItemsNew: foundItemsNew })
             }
-        })   
+        })
     }
-    else if(category === 'smartphones'){
+    else if (category === 'smartphones') {
         findDB(['smartphones']);
     }
-    else if(category === 'laptops'){
+    else if (category === 'laptops') {
         findDB(['laptops']);
     }
-    else if(category === 'groceries'){
+    else if (category === 'groceries') {
         findDB(['groceries']);
     }
-    else if(category === 'furniture'){
+    else if (category === 'furniture') {
         findDB(['furniture']);
     }
-    else if(category === 'tops'){
+    else if (category === 'tops') {
         findDB(['tops']);
     }
-    else if(category === 'mensShirts'){
+    else if (category === 'mensShirts') {
         findDB(['mens-shirts']);
     }
-    else if(category === 'mensShoes'){
+    else if (category === 'mensShoes') {
         findDB(['mens-shoes']);
     }
-    else if(category === 'mensWatches'){
+    else if (category === 'mensWatches') {
         findDB(['mens-watches']);
     }
-    else if(category === 'womensWatches'){
+    else if (category === 'womensWatches') {
         findDB(['womens-watches']);
     }
-    else if(category === 'womensBags'){
+    else if (category === 'womensBags') {
         findDB(['womens-bags']);
     }
-    else if(category === 'womensJewellery'){
+    else if (category === 'womensJewellery') {
         findDB(['womens-jewellery']);
     }
-    else if(category === 'sunglasses'){
+    else if (category === 'sunglasses') {
         findDB(['sunglasses']);
     }
-    else if(category === 'automotive'){
+    else if (category === 'automotive') {
         findDB(['automotive']);
     }
-    else if(category === 'motorcycle'){
+    else if (category === 'motorcycle') {
         findDB(['motorcycle']);
     }
-    else if(category === 'lighting'){
+    else if (category === 'lighting') {
         findDB(['lighting']);
     }
 })
@@ -613,143 +697,143 @@ app.post('/products-categories', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products-categories-user', function(req, res){
-  
+app.post('/products-categories-user', function (req, res) {
+
     const signUpEmail = req.body.userEmail2;
-    
 
-    function findDB(categoryName){
-        Techitem.find({category: categoryName}, function(err, foundItemsNew){
-            if(err){
+
+    function findDB(categoryName) {
+        Techitem.find({ category: categoryName }, function (err, foundItemsNew) {
+            if (err) {
                 console.log(err);
-            }else{
-                
+            } else {
 
-                buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-                    if(err){
+
+                buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+                    if (err) {
                         console.log('error in part 1' + err);
-                    }else{
-                        if(foundUser){
-                            
-                  
-                              const signUpfName = foundUser.fname;
-                              const signUplName = foundUser.lname;
-                              const signUpEmail = foundUser.email;
-              
-                              res.render('buyer/products', 
-                              {
-                                  foundItemsNew: foundItemsNew,
-                                  signUpfName: signUpfName,
-                                  signUplName: signUplName,
-                                  signUpEmail: signUpEmail
-                              })
-              
-                            
-                          }else{
+                    } else {
+                        if (foundUser) {
+
+
+                            const signUpfName = foundUser.fname;
+                            const signUplName = foundUser.lname;
+                            const signUpEmail = foundUser.email;
+
+                            res.render('buyer/products',
+                                {
+                                    foundItemsNew: foundItemsNew,
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail
+                                })
+
+
+                        } else {
                             console.log('user not found (deleted I guess)');
-                          }
+                        }
                     }
                 })
             }
         })
     }
 
-    
+
     const category = req.body.btnCategory;
     console.log(category);
 
 
-    if(category === 'tech'){
+    if (category === 'tech') {
         findDB(['smartphones', 'laptops']);
-    }else if(category === 'skinCare'){
+    } else if (category === 'skinCare') {
         findDB(['skincare']);
-    }else if(category === 'fragrances'){
+    } else if (category === 'fragrances') {
         findDB(['fragrances']);
-    }else if(category === 'womensDress'){
+    } else if (category === 'womensDress') {
         findDB(['womens-dresses']);
-    }else if(category === 'decor'){
+    } else if (category === 'decor') {
         findDB(['home-decoration']);
-    }else if(category === 'shoes'){
+    } else if (category === 'shoes') {
         findDB(['mens-shoes', 'womens-shoes']);
     }
-    else if(category === 'all'){
-        Techitem.find({}, function(err, foundItemsNew){
-            if(err){
+    else if (category === 'all') {
+        Techitem.find({}, function (err, foundItemsNew) {
+            if (err) {
                 console.log(err);
-            }else{
-                
-                buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-                    if(err){
+            } else {
+
+                buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+                    if (err) {
                         console.log('error in part 1' + err);
-                    }else{
-                        if(foundUser){
-                            
-                  
-                              const signUpfName = foundUser.fname;
-                              const signUplName = foundUser.lname;
-                              const signUpEmail = foundUser.email;
-              
-                              res.render('buyer/products', 
-                              {
-                                  foundItemsNew: foundItemsNew,
-                                  signUpfName: signUpfName,
-                                  signUplName: signUplName,
-                                  signUpEmail: signUpEmail
-                              })
-              
-                            
-                          }else{
+                    } else {
+                        if (foundUser) {
+
+
+                            const signUpfName = foundUser.fname;
+                            const signUplName = foundUser.lname;
+                            const signUpEmail = foundUser.email;
+
+                            res.render('buyer/products',
+                                {
+                                    foundItemsNew: foundItemsNew,
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail
+                                })
+
+
+                        } else {
                             console.log('user not found (deleted I guess)');
-                          }
+                        }
                     }
                 })
 
             }
-        })   
+        })
     }
-    else if(category === 'smartphones'){
+    else if (category === 'smartphones') {
         findDB(['smartphones']);
     }
-    else if(category === 'laptops'){
+    else if (category === 'laptops') {
         findDB(['laptops']);
     }
-    else if(category === 'groceries'){
+    else if (category === 'groceries') {
         findDB(['groceries']);
     }
-    else if(category === 'furniture'){
+    else if (category === 'furniture') {
         findDB(['furniture']);
     }
-    else if(category === 'tops'){
+    else if (category === 'tops') {
         findDB(['tops']);
     }
-    else if(category === 'mensShirts'){
+    else if (category === 'mensShirts') {
         findDB(['mens-shirts']);
     }
-    else if(category === 'mensShoes'){
+    else if (category === 'mensShoes') {
         findDB(['mens-shoes']);
     }
-    else if(category === 'mensWatches'){
+    else if (category === 'mensWatches') {
         findDB(['mens-watches']);
     }
-    else if(category === 'womensWatches'){
+    else if (category === 'womensWatches') {
         findDB(['womens-watches']);
     }
-    else if(category === 'womensBags'){
+    else if (category === 'womensBags') {
         findDB(['womens-bags']);
     }
-    else if(category === 'womensJewellery'){
+    else if (category === 'womensJewellery') {
         findDB(['womens-jewellery']);
     }
-    else if(category === 'sunglasses'){
+    else if (category === 'sunglasses') {
         findDB(['sunglasses']);
     }
-    else if(category === 'automotive'){
+    else if (category === 'automotive') {
         findDB(['automotive']);
     }
-    else if(category === 'motorcycle'){
+    else if (category === 'motorcycle') {
         findDB(['motorcycle']);
     }
-    else if(category === 'lighting'){
+    else if (category === 'lighting') {
         findDB(['lighting']);
     }
 })
@@ -763,29 +847,29 @@ app.post('/products-categories-user', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products-:productName', function(req, res){
-    
+app.post('/products-:productName', function (req, res) {
+
 
     let parameterName = req.body.productTitleForParam;
     req.params.productName = parameterName;
 
-    const selectedProductID =  req.body.productID;
-    const selectedProductCategoroy =  req.body.productCategory;
+    const selectedProductID = req.body.productID;
+    const selectedProductCategoroy = req.body.productCategory;
 
 
-    Techitem.find({category: selectedProductCategoroy}, function(error, foundInfoAll){
+    Techitem.find({ category: selectedProductCategoroy }, function (error, foundInfoAll) {
 
-        if(error){
+        if (error) {
             console.log(error)
-        }else{
-            Techitem.find({_id: selectedProductID}, function(err, foundInfo){
-                if(err){
+        } else {
+            Techitem.find({ _id: selectedProductID }, function (err, foundInfo) {
+                if (err) {
                     console.log(err);
-                }else{
+                } else {
                     // console.log(foundInfo[0].raring);
                     // console.log(foudInfoAll[1]._id);
                     // console.log('yaha hai');
-                    res.render('guest/productDetail', {foundInfo: foundInfo, foundInfoAll: foundInfoAll})
+                    res.render('guest/productDetail', { foundInfo: foundInfo, foundInfoAll: foundInfoAll })
                 }
             })
         }
@@ -801,51 +885,51 @@ app.post('/products-:productName', function(req, res){
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/product-user-:productName2', function(req, res){
-    
+app.post('/product-user-:productName2', function (req, res) {
+
     const signUpEmail = req.body.userEmail4;
     let parameterName = req.body.productTitleForParam2;
     req.params.productName2 = parameterName;
 
-    const selectedProductID =  req.body.productID;
-    const selectedProductCategoroy =  req.body.productCategory;
+    const selectedProductID = req.body.productID;
+    const selectedProductCategoroy = req.body.productCategory;
 
 
-    Techitem.find({category: selectedProductCategoroy}, function(error, foundInfoAll){
+    Techitem.find({ category: selectedProductCategoroy }, function (error, foundInfoAll) {
 
-        if(error){
+        if (error) {
             console.log(error)
-        }else{
-            Techitem.find({_id: selectedProductID}, function(err, foundInfo){
-                if(err){
+        } else {
+            Techitem.find({ _id: selectedProductID }, function (err, foundInfo) {
+                if (err) {
                     console.log(err);
-                }else{
-                    
+                } else {
 
-                    buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-                        if(err){
+
+                    buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+                        if (err) {
                             console.log('error in part 1' + err);
-                        }else{
-                            if(foundUser){
-                                
-                      
-                                  const signUpfName = foundUser.fname;
-                                  const signUplName = foundUser.lname;
-                                  const signUpEmail = foundUser.email;
-                  
+                        } else {
+                            if (foundUser) {
+
+
+                                const signUpfName = foundUser.fname;
+                                const signUplName = foundUser.lname;
+                                const signUpEmail = foundUser.email;
+
                                 //   console.log('sahi hai');
-                                  res.render('buyer/productDetail2', {
+                                res.render('buyer/productDetail2', {
                                     foundInfo: foundInfo,
                                     signUpfName: signUpfName,
                                     signUplName: signUplName,
                                     signUpEmail: signUpEmail,
                                     foundInfoAll: foundInfoAll
                                 })
-                  
-                                
-                              }else{
+
+
+                            } else {
                                 console.log('user not found (deleted I guess)');
-                              }
+                            }
                         }
                     })
                 }
@@ -863,15 +947,15 @@ app.post('/product-user-:productName2', function(req, res){
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-app.post('/custom', function(req, res) {
-    
+app.post('/custom', function (req, res) {
+
     const btnsNav = req.body.btnsNav;
-    
-    if(btnsNav === 'logo'){
+
+    if (btnsNav === 'logo') {
 
         res.redirect('/');
 
-    }else if (btnsNav === 'login') {
+    } else if (btnsNav === 'login') {
 
         res.redirect('/login');
 
@@ -884,83 +968,92 @@ app.post('/custom', function(req, res) {
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-app.post('/custom-user', function(req, res) {
-    
+app.post('/custom-user', function (req, res) {
+
     const btnsNav = req.body.btnsNav;
     const signUpEmail = req.body.userEmail3;
 
 
-    if(btnsNav === 'logo'){
+    if (btnsNav === 'logo') {
 
-        
 
-        buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-            if(err){
-              console.log(err)
-            }else{
-                if(foundUser){
-                  
-        
+
+        buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+            if (err) {
+                console.log(err)
+            } else {
+                if (foundUser) {
+
+
                     const signUpfName = foundUser.fname;
                     const signUplName = foundUser.lname;
                     const signUpEmail = foundUser.email;
-    
-                    Techitem.find({}, function(err, foundItems){
-                        if(err){
+
+                    Techitem.find({}, function (err, foundItems) {
+                        if (err) {
                             console.log(err);
-                        }else{
+                        } else {
                             // console.log(foundItems);
-                            res.render('buyer/home', 
-                            {
-                                foundItems: foundItems,
-                                signUpfName: signUpfName,
-                                signUplName: signUplName,
-                                signUpEmail: signUpEmail
-                            })
+                            res.render('buyer/home',
+                                {
+                                    foundItems: foundItems,
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail
+                                })
                         }
                     })
-    
-                  
-                }else{
-                  console.log('incorrect email');
+
+
+                } else {
+                    console.log('incorrect email');
                 }
-              }
-            });
+            }
+        });
 
-    }else if(btnsNav === 'cart'){
-        
-        
+    } else if (btnsNav === 'cart') {
 
-        buyerID.findOne({email: signUpEmail}, function(err, foundUser){
-            if(err){
-              console.log(err)
-            }else{
-                if(foundUser){
-                  
-        
+
+
+        buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+            if (err) {
+                console.log(err)
+            } else {
+                if (foundUser) {
+
+
                     const signUpfName = foundUser.fname;
                     const signUplName = foundUser.lname;
                     const signUpEmail = foundUser.email;
                     const cart = foundUser.cart;
-                    
-            
-                    res.render('buyer/cart', 
-                    {
-                        signUpfName: signUpfName,
-                        signUplName: signUplName,
-                        signUpEmail: signUpEmail,
-                        cart: cart
-                    })
-                    
-                    
-    
-                  
-                }else{
-                  console.log('user deleted i guess');
+
+
+
+
+
+
+
+
+
+
+
+                    res.render('buyer/cart',
+                        {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            cart: cart
+                        })
+
+
+
+
+                } else {
+                    console.log('user deleted i guess');
                 }
-              }
-            });
-            
+            }
+        });
+
     }
 });
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -971,8 +1064,24 @@ app.post('/custom-user', function(req, res) {
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// let port = 3000;
 
-app.listen(3000, function(req, res){
+// let server = http.createServer(app)
+
+// reload(app).then(function (reloadReturned) {
+//     // reloadReturned is documented in the returns API in the README
+
+//     // Reload started, start web server
+//     server.listen(app.get('port'), function () {
+//       console.log('Web server listening on port ' + app.get('port'))
+//     })
+//   }).catch(function (err) {
+//     console.error('Reload could not start, could not start server/sample app', err)
+//   })
+
+
+
+app.listen(3000, function (req, res) {
     console.log('Server Started on port 3000');
 })
 
