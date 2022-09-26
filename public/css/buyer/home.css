@@ -15,11 +15,14 @@
   border: 1px solid #BAD7DF;
   border-radius: 5px;
   background-color: #BAD7DF;
-  position: absolute;
+  position: fixed;
   top: 50px;
   left: 50%;
   transform: translate(-50%);
   z-index: 100;
+}
+.colorRed{
+  color: red;
 }
 
 .persons-usersname{

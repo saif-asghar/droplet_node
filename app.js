@@ -28,7 +28,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
-// app.set('port', process.env.PORT || 3000)
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by APP END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -83,6 +82,9 @@ const signupSchema = new mongoose.Schema({
         required: true
     },
     cart: [
+        techitemScehma
+    ],
+    favourites: [
         techitemScehma
     ]
 });
@@ -357,7 +359,7 @@ app.post('/add-to-cart', function (req, res) {
                     if (err) {
                         console.log(err)
                     } else {
-                        console.log('product added to cart successfully');
+                        console.log('product added to cart');
                     }
                 })
             }
@@ -366,7 +368,66 @@ app.post('/add-to-cart', function (req, res) {
 
 
 
-    res.send({ response: 'product added to cart successfully' });
+    res.send({ response: 'product added to cart' });
+
+})
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/favourites', function (req, res) {
+
+    let productID = req.body.productID;
+    let userEmail = req.body.userEmail;
+
+    // console.log(productID);
+
+
+    
+
+    Techitem.findOne({ _id: productID }, function (error, foundProduct) {
+        if (error) {
+            console.log(error)
+        } else {
+            if (foundProduct) {
+                    buyerID.findOne({ email: userEmail }, function(error2, foundPerson){
+                    if(error2){
+                        console.log(error2)
+                    }else{
+                        if(foundPerson){
+                            if(JSON.stringify(foundPerson.favourites).includes(JSON.stringify(foundProduct._id))){
+                                buyerID.updateOne({ email: userEmail }, { $pull: { favourites: foundProduct } }, function (err) {
+                                    if (err) {
+                                        console.log(err)
+                                    } else {
+                                        console.log('product removed from favourites');
+                                    }
+                                })
+                                res.send({ response: 'product removed from favourites' });
+                            }else{
+                                buyerID.updateOne({ email: userEmail }, { $push: { favourites: foundProduct } }, function (err) {
+                                    if (err) {
+                                        console.log(err)
+                                    } else {
+                                        console.log('product added to favourites');
+                                    }
+                                })
+                                res.send({ response: 'product added to favourites' });
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    })
+
+        
+    
 
 })
 
@@ -483,13 +544,15 @@ app.post('/products-user', function (req, res) {
                             const signUpfName = foundUser.fname;
                             const signUplName = foundUser.lname;
                             const signUpEmail = foundUser.email;
+                            const user = foundUser;
 
                             res.render('buyer/products',
                                 {
                                     foundItemsNew: foundItemsNew,
                                     signUpfName: signUpfName,
                                     signUplName: signUplName,
-                                    signUpEmail: signUpEmail
+                                    signUpEmail: signUpEmail,
+                                    user: user
                                 })
 
 
@@ -660,13 +723,15 @@ app.post('/products-categories-user', function (req, res) {
                             const signUpfName = foundUser.fname;
                             const signUplName = foundUser.lname;
                             const signUpEmail = foundUser.email;
+                            const user = foundUser;
 
                             res.render('buyer/products',
                                 {
                                     foundItemsNew: foundItemsNew,
                                     signUpfName: signUpfName,
                                     signUplName: signUplName,
-                                    signUpEmail: signUpEmail
+                                    signUpEmail: signUpEmail,
+                                    user: user
                                 })
 
 
@@ -713,13 +778,15 @@ app.post('/products-categories-user', function (req, res) {
                             const signUpfName = foundUser.fname;
                             const signUplName = foundUser.lname;
                             const signUpEmail = foundUser.email;
+                            const user= foundUser;
 
                             res.render('buyer/products',
                                 {
                                     foundItemsNew: foundItemsNew,
                                     signUpfName: signUpfName,
                                     signUplName: signUplName,
-                                    signUpEmail: signUpEmail
+                                    signUpEmail: signUpEmail,
+                                    user: user
                                 })
 
 
@@ -993,22 +1060,6 @@ app.post('/custom-user', function (req, res) {
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// let port = 3000;
-
-// let server = http.createServer(app)
-
-// reload(app).then(function (reloadReturned) {
-//     // reloadReturned is documented in the returns API in the README
-
-//     // Reload started, start web server
-//     server.listen(app.get('port'), function () {
-//       console.log('Web server listening on port ' + app.get('port'))
-//     })
-//   }).catch(function (err) {
-//     console.error('Reload could not start, could not start server/sample app', err)
-//   })
-
-
 
 app.listen(3000, function (req, res) {
     console.log('Server Started on port 3000');
