@@ -254,44 +254,52 @@
               <div class="cart_list_wrap">
                 <div class="cart_responsive">
           
+                  <%const array = cart;%>
 
+                  <%const result = [...array.reduce((r, e) => {%>
+                    <%let k = `${e._id}`;%>
+                    <%if(!r.has(k)){%>
+                       <%r.set(k, {...e, count: 1})%>
+                        <%}else{ r.get(k).count++}%>
+                    <%return r;%>
+                  <%}, new Map).values()]%>
+                  
                   
 
-                  <%for(const product of Object.entries(cart)){%>
+                  <%for(i = 0; i < result.length; i++){%>
 
-                    
-
-                    
-                
                     <div class="tr_item">
-                    <div class="td_item item_img">
-                      <img src="<%= product[1].thumbnail %>">
-                    </div>
-                    <div class="td_item item_name">
-                      <label class="main"><%= product[1].title %></label>
-                      <label class="sub">Ref. <%= product[1].id %></label>
-                    </div>
-                    <div class="td_item item_color">
-                      <label><%= product[1].brand %></label>
-                    </div>
-                    <div class="td_item item_qty">
-                      <select>
-      
-                        
-                        <%for(i = 0; i < product[1].stock; i++){%>
-                          <option value="<%= [i + 1] %>"><%= [i + 1] %></option>
-                        <%}%>
+                      <div class="td_item item_img">
+                        <img src="<%= result[i]._doc.thumbnail %>">
+                      </div>
+                      <div class="td_item item_name">
+                        <label class="main"><%= result[i]._doc.title %></label>
+                        <label class="sub">Ref. <%= result[i]._doc.id %></label>
+                      </div>
+                      <div class="td_item item_color">
+                        <label><%= result[i]._doc.brand %></label>
+                      </div>
+                      <div class="td_item item_qty">
 
-                      </select>
-                    </div>
-                    <div class="td_item item_price">
-                      <label>$ <%= product[1].price %></label>
-                    </div>
-                    <div class="td_item item_remove">
-                      <span class="material-icons-outlined">close</span>
-                    </div>
-                    </div>
-          
+                        <div class="qty-container">
+                          <button class="qty-btn-minus btn-danger btn-cornered mr-1" type="button"><i class="fa fa-arrow-left"></i></button>
+                        <input type="text" name="qty" value="1" class="input-qty input-cornered">
+                          <button class="qty-btn-plus btn-danger btn-cornered ml-1" type="button"><i class="fa fa-arrow-right"></i></button>
+                        </div>
+
+                      </div>
+                      <div class="td_item item_price">
+                        <label>$ <span class="individual-price">
+                          <%=result[i]._doc.price%>
+                        </span></label>
+                        <input type="hidden" class="priceOnePiece" value="<%=result[i]._doc.price%>">
+                      </div>
+                      <div class="td_item item_remove">
+                        <span class="removeItem material-icons-outlined">close</span>
+                        <input type="hidden" class="product-id" value="<%= result[i]._doc.id %>">
+                        <input type="hidden" class="user-email" value="<%= signUpEmail %>">
+                      </div>
+                      </div>
                   <%}%>
           
                 </div>
@@ -304,7 +312,7 @@
                   </div>
                   <div class="subtotal">
                     <label>Subtotal: </label>
-                    <strong>$2451.00</strong>
+                    <strong>$<span id="subTotal"></span></strong>
                   </div>
                 </div>
               </div>
@@ -584,11 +592,11 @@
 <!-- JAVASCRIPT -->
 <!-- <script src="js/home.js"></script> -->
 <script src="js/searchBar.js"></script>
+<script src="js/buyer/insideCart.js"></script>
 <script src="js/buyer/toggleUser.js"></script>
 <!-- <script src="js/cart.js"></script> -->
 <!-- JAVASCRIPT -->
 <!-- <script src="js/home.js"></script> -->
-
 </body>
 
 </html>

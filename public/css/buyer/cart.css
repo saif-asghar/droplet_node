@@ -1442,3 +1442,40 @@
 .cart_wrapper .cart_details .form_row .btn:active {
   box-shadow: inset 0 0 28px 0px rgba(0, 0, 0, 0.3);
 }
+
+.qty-container{
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.qty-container .qty-btn-minus, .qty-container .qty-btn-plus {
+  border: 1px solid #d4d4d4;
+  padding: 10px 13px;
+  font-size: 10px;
+  height: 38px;
+  width: 38px;
+  transition: 0.3s;
+}
+
+.fa-arrow-left, .fa-arrow-right{
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+
+}
+
+.qty-container .input-qty {
+  text-align: center;
+  padding: 6px 10px;
+  border: 1px solid #d4d4d4;
+  max-width: 80px;
+}
+
+.btn-cornered, .input-cornered {
+  border-radius: 4px;
+}
