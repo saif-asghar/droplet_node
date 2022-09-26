@@ -289,7 +289,7 @@
     </form>
 
 
-
+    
 
 
 
@@ -310,14 +310,29 @@
                                 <img class="card-img-top" style="border-radius: 5px; max-height: 306px;" src="<%= product[1].thumbnail %>" alt="">
                                 <div class="card-overlay">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-secondary"><i class="fa fa-heart"></i></button>
-                                    <form method="post" class="formForAJAX<%= product[0] %>">
-                                        <input type="hidden" class="productID" value="<%= product[1]._id %>">
-                                        <input type="hidden" id="userEmail" value="<%= signUpEmail %>">
+                                        <input type="hidden" value="<%= product[1]._id %>">
+
+
+
+                                        <% if(JSON.stringify(user.favourites).includes(product[1]._id)) {%>
+
+                                            <button type="button" onclick="addToFavourites(this)" class="btn btn-secondary"><i style="color: red;" class="fa fa-heart"></i></button>
+
+                                        <%}else{%>
+
                                         
-                                        <button type="button" onclick="addToCart(this)" id="addToCartBtn" class="btn btn-light"><i class="fa  fa-shopping-cart"></i> Add to cart</button>
-                                        
-                                    </form>
+                                        <button type="button" onclick="addToFavourites(this)" class="btn btn-secondary"><i class="fa fa-heart"></i></button>
+
+                                        <%}%>
+
+                                        <form method="post" class="formForAJAX<%= product[0] %>">
+                                            <input type="hidden" class="productID" value="<%= product[1]._id %>">
+                                            <input type="hidden" id="userEmail" value="<%= signUpEmail %>">
+                                            
+                                            <button type="button" onclick="addToCart(this)" id="addToCartBtn" class="btn btn-light"><i class="fa  fa-shopping-cart"></i> Add to cart</button>
+                                            
+                                        </form>
+
                                     </div>                                    
                                 </div>
                                 </div>
@@ -430,6 +445,7 @@
 
 
 <!-- JAVASCRIPT -->
+<script src="js/buyer/favourite.js"></script>
 <script src="js/buyer/toggleUser.js"></script>
 <script src="js/searchBar.js"></script>
 <script src="js/buyer/addToCart.js"></script>
