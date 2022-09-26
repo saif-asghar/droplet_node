@@ -338,8 +338,6 @@ app.post('/getProducts', async (req, res) => {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-let cartProducts = [];
-
 app.post('/add-to-cart', function (req, res) {
 
     let productID = req.body.productID;
@@ -353,17 +351,15 @@ app.post('/add-to-cart', function (req, res) {
             console.log(error)
         } else {
             if (foundProduct) {
-                cartProducts.push(foundProduct);
-                // console.log(cartProducts);
 
-                buyerID.updateOne({ email: userEmail }, { cart: cartProducts }, function (err) {
+
+                buyerID.updateOne({ email: userEmail }, { $push: { cart: foundProduct } }, function (err) {
                     if (err) {
                         console.log(err)
                     } else {
                         console.log('product added to cart successfully');
                     }
                 })
-
             }
         }
     })
@@ -387,72 +383,17 @@ app.post('/remove-product', function (req, res) {
     let productID = req.body.productID;
     let userEmail = req.body.userEmail;
 
-    console.log(productID, userEmail);
-
-
-    // buyerID.findOneAndUpdate({email: userEmail}, {cart: {_id: productID}}, function(err){
-    //     if(err){
-    //         console.log(err)
-    //     }else{
-    //         console.log('product removed');
-    //     }
-    // })
-
-    // buyerID.update( 
-    //     { "email" : userEmail} , 
-    //     { "$pull" : { "cart" : { "_id" :  productID } } } , 
-    //     { "multi" : true }  
-    // );
-
-    // buyerID.update({cart: { _id: productID }}, { "$pull": { "divers": { "user": userIdToRemove } }}, function(err, obj) {
-    //     //do something smart
-    // });
-
-    let db = 'Ecommerce-Website';
-    buyerID.update(
+    buyerID.updateMany(
         { email: userEmail },
         { $pull: { cart: {id: productID} } },
+        function(err){
+            if(err){
+                console.log(err);
+            }else{
+                console.log('success');
+            }
+        }
     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Techitem.findOne({_id: productID}, function(error, foundProduct){
-    //     if(error){
-    //         console.log(error)
-    //     }else{
-    //         if(foundProduct){
-    //             cartProducts.push(foundProduct);
-    //             // console.log(cartProducts);
-
-    //             buyerID.updateOne({email: userEmail}, {cart: cartProducts}, function(err){
-    //                 if(err){
-    //                     console.log(err)
-    //                 }else{
-    //                     console.log('product added to cart successfully');
-    //                 }
-    //             })
-
-    //         }
-    //     }
-    // })
-
-
-
-    // res.send({response: 'product added to cart successfully'});
-
 })
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            { APP.POST Search bar Autocomplete END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -968,6 +909,9 @@ app.post('/custom', function (req, res) {
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
 app.post('/custom-user', function (req, res) {
 
     const btnsNav = req.body.btnsNav;
@@ -1014,29 +958,17 @@ app.post('/custom-user', function (req, res) {
     } else if (btnsNav === 'cart') {
 
 
-
         buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
             if (err) {
                 console.log(err)
             } else {
                 if (foundUser) {
-
-
+    
+    
                     const signUpfName = foundUser.fname;
                     const signUplName = foundUser.lname;
                     const signUpEmail = foundUser.email;
                     const cart = foundUser.cart;
-
-
-
-
-
-
-
-
-
-
-
                     res.render('buyer/cart',
                         {
                             signUpfName: signUpfName,
@@ -1044,15 +976,12 @@ app.post('/custom-user', function (req, res) {
                             signUpEmail: signUpEmail,
                             cart: cart
                         })
-
-
-
-
                 } else {
                     console.log('user deleted i guess');
                 }
             }
         });
+        
 
     }
 });

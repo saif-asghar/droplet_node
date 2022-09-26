@@ -264,7 +264,7 @@
                     <%return r;%>
                   <%}, new Map).values()]%>
                   
-                  
+                  <%if(result.length > 0){%>
 
                   <%for(i = 0; i < result.length; i++){%>
 
@@ -301,6 +301,11 @@
                       </div>
                       </div>
                   <%}%>
+                <%}else{%>
+                  <div class="qty-container">
+                    <span class="cart-empty-message">your cart is empty</span>
+                  </div>
+                <%}%>
           
                 </div>
                 <div class="footer">

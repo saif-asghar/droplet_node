@@ -1,4 +1,3 @@
-const individualPrice = document.querySelectorAll('.individual-price');
 let subTotal = document.querySelector('#subTotal');
 const quantityOfProduct = document.getElementsByName('quantityOfProduct');
 const body = document.querySelector('body');
@@ -11,7 +10,7 @@ const body = document.querySelector('body');
 function totalPrice(){
 
     let totalPrice = 0;
-    individualPrice.forEach(function(price){
+    document.querySelectorAll('.individual-price').forEach(function(price){
         
         let eachProductPrice = price.innerHTML;
     
@@ -20,8 +19,6 @@ function totalPrice(){
     })
     
     subTotal.innerHTML = totalPrice;
-    
-    // console.log(totalPrice);
 }
 totalPrice();
 
@@ -78,24 +75,18 @@ removeBtn.click(function() {
     // console.log($n);
     let $m = $(this).parent('.item_remove').find('.product-id').val();
     let $e = $(this).parent('.item_remove').find('.user-email').val();
-    
+    let $r = $(this).parent('.item_remove').parent('.tr_item');
+    // $r.attr('style', 'display: none;');
+    $r.remove();
+    totalPrice();
     $.ajax({
         url: "/remove-product",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({productID: $m, userEmail: $e}),
         success: function(res){
-            
-
-
-
-
         }
-    })
-
-
-
-
+      })
 })
 
 
