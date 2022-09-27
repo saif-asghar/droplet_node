@@ -17,13 +17,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 
         <!--FONT AWESOME-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <!--PLUGIN-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
         <!-- Bootstrap 5 -->
-        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
         <!--GOOGLE FONTS-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,11 +43,10 @@
 
     <body>
 
-
-      
         <!--NAVIGATION-->
         <nav>
             <div class="topnav" id="myTopnav">
+                
                 <form action="/custom-user" method="post">
                     <button name="btnsNav" value="logo" id="logo"><img src="./pics/logoCorrect.jpg" alt="LOGO"></button>
                     <button type="submit" name="btnsNav" value="cart" id="cart" class="js-open-menu animate"><i class="fa fa-cart-plus"></i>Cart</button>
@@ -55,7 +55,7 @@
                         <div id="navdrop" class="btn-dark">
                             <div class="drop-btn">
                                 <a id="menu" tooltipped="" href="#!">
-                                    <p class="persons-usersname">hello, <span><%= signUpfName %></span></p>
+                                    <p class="persons-usersname"><span><%= signUpfName %></span></p>
                                 </a>
                             </div>
                             <div class="tooltip"></div>
@@ -227,9 +227,9 @@
                     <input type="text" style="display: none;" name="userEmail3" value="<%= signUpEmail %>">
                 </form>
                     <div style="position: absolute; width: 60%; left: 15%;">
-                        <form action="/products-user" method="post">
+                    <form action="/products-user" method="post">
                         <input placeholder="search here..." autocomplete="off" onkeyup="sendData(this)" name="searchProduct" class="search-bar-input" type="text">
-                        <button class="search-bar-icon"><i class="fa fa-search" style="font-size: 20px"></i></button>
+                        <button type="submit" class="search-bar-icon"><i class="fa fa-search" style="font-size: 20px"></i></button>
                         <div id="searchResults"></div>
                         <input type="text" style="display: none;" name="userEmail" value="<%= signUpEmail %>">
                     </form>
@@ -239,198 +239,135 @@
             </div>
         </nav>
         
-    
 
 
+        <!-- ADDED TO CART POPUP -->
+            <p id="randomP" class="container hiddenDplay"></p>
+        
 
-        <!--MAIN-->
+
         <form action="/products-categories-user" method="post">
-            <input type="text" name="foundItems" style="display: none;" value="<%= foundItems %>">
             <input type="text" style="display: none;" name="userEmail2" value="<%= signUpEmail %>">
-        <main id="main0" style="background-image:url('https://i.postimg.cc/h4xMcxZx/banner.jpg');">
-            <section>
-                <em>Eco friendly</em>
-                <h1 class="title">We like to think of our wares as full sensory experiences!</h1>
-                <button name="btnCategory" class="btn1" value="decor">Shop Now</button>
-            </section>
-        </main>
-        <main id="main1" class="display-hidden" style="background-image:url('./pics/main1new.jpg'); background-position: center;">
-            <section>
-                <em>Durable</em>
-                <h1 class="title">Shoes that transform your body language and attitude.</h1>
-                <button name="btnCategory" class="btn1" value="shoes">Shop Now</button>
-            </section>
-        </main>
-        <main id="main2" class="display-hidden" style="background-image:url('./pics/main2new2.webp');">
-            <section>
-                <em>Tech</em>
-                <h1 class="title">We have all varieties of tech available. Top in the line</h1>
-                <button name="btnCategory" class="btn1" value="tech">Shop Now</button>
-            </section>
-        </main>
-
-
-
-
-        <!--SECTION1-->
-        <div class="section1">
-            <div class="slider">
-                <div class="slide-track">
-                    <div class="slide">
-                        <img src="<%= foundItems[11].thumbnail %>" height="100" alt="" />
-                        
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/pheonox.png" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="<%= foundItems[12].thumbnail %>" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="<%= foundItems[15].thumbnail %>" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/Nike-Logo.png" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/Adidaslogo.webp" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/chanel2.png" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/images.png" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/rolex.jpg" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/levis.png" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="./pics/eagle.jpg" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="<%= foundItems[91].thumbnail %>" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="<%= foundItems[99].thumbnail %>" height="100" alt="" />
-                    </div>
-                    <div class="slide">
-                        <img src="<%= foundItems[55].thumbnail %>" height="100" alt="" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <!--SECTION2-->
-        
-        <div class="section2">
-            <section>
-                <em>Category</em>
-                <h1 class="title">Our Categories</h1>
-                <p>We have got a wide variety of products for you to explore and enjoy...
-                </p>
-            </section>
-            <section>
-                    <span>
-                        <img src="<%= foundItems[6].images[0]%>" alt="" loading="lazy">
-                        <button name="btnCategory" value="tech">Tech</button>
-                    </span>
-                    <span>
-                        <img src="<%= foundItems[13].thumbnail%>" alt="" loading="lazy">
-                        <button name="btnCategory" value="skinCare">Skin Care</button>
-                    </span>
-                    <span>
-                        <img src="<%= foundItems[12].images[0]%>" alt="" loading="lazy">
-                        <button name="btnCategory" value="fragrances">Fragrances</button>
-                    </span>
-                </section>
-            </div>
-        
-
-
-        <!--SECTION3-->
-        <div class="section3">
-            <section>
-                <figure><img src="./pics/dress.webp" alt="" loading="lazy"></figure>
-            </section>
-            <section>
-                <span>
-                    <em>Dresses</em>
-                    <h1 class="title">Never underestimate the power of a great outfit.</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-                    <p>Laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>
-                    <button class="btn1" name="btnCategory" value="womensDress">Shop Now</button>
-                </span>
-            </section>
-        </div>
-
-
-
-
-        <!--SECTION4-->
-        <div class="section4">
-            <section>
-                <span>
-                    <em>Home Decor</em>
-                    <h1 class="title">The Self Discovery Collection</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <button class="btn1" name="btnCategory" value="decor">Shop Now</button>
-                </span>
-            </section>
-            <section>
-                <figure><img src="https://i.postimg.cc/bNx6HbQ8/02.jpg" alt="" loading="lazy"></figure>
-            </section>
-        </div>
-
-    
-
-
-        <!--SECTION5-->
-        <div class="section5">
-            <section>
-                <figure><img src="https://i.postimg.cc/wTQVszpj/03.jpg" alt="" loading="lazy"></figure>
-            </section>
-            <section>
-                <span>
-                    <h1 class="title">The Self Discovery Collection</h1>
-                </span>
-            </section>
-        </div>
-
-
-
-
-        <!--SECTION6-->
-        <div class="section6">
-            <section>
-                <span>
-                    <img src="https://i.postimg.cc/tJ05FCJY/icon-4.png" alt="">
-                    <p>(+x) xxxx xxxxx</p>
-                </span>
-                <span>
-                    <img src="https://i.postimg.cc/bvBLNRj0/icon-5.png" alt="">
-                    <p>support@websitename.com</p>
-                </span>
-                <span>
-                    <img src="https://i.postimg.cc/B6Pp81qr/icon-6.png" alt="">
-                    <p>0th Floor Auricle Building Levioosa Road<br> P.O Box 0000 - 00000 Province - Country</p>
-                </span>
-            </section>
+        <!-- Sort bar -->
+        <div class="container">
+            <ul class="nav nav-tabs">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Sort</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Price Low to High</a></li>
+                <li><a class="dropdown-item" href="#">Price High to Low</a></li>
+                <li><a class="dropdown-item" href="#">Rating</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
     </form>
 
 
     
+    <div class="container mt-5">
+        <h3>Favourites</h3>
+    </div>
+
+        
+            <!--PRODUCT CARDS-->
+            <div class="container py-5">
+                <div class="row">
+
+                    <%if(favourites.length > 0){%>
+                        <%for (const product of Object.entries(favourites)){%>
+                            <div class="col-lg-3">
+                            
+                        <!-- Product Card -->
+                        <div id="productCard">
+                            <div class="product_card">
+                              <div class="card border-0">
+                                <div class="card-header bg-transparent border-0 p-0">
+                                <img class="card-img-top" style="border-radius: 5px; max-height: 306px;" src="<%= product[1].thumbnail %>" alt="">
+                                <div class="card-overlay">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <input type="hidden" value="<%= product[1]._id %>">
+
+
+
+                                       
+
+                                        <form method="post" class="formForAJAX<%= product[0] %>">
+                                            <input type="hidden" class="productID" value="<%= product[1]._id %>">
+                                            <input type="hidden" id="userEmail" value="<%= signUpEmail %>">
+                                            
+                                            <button type="button" onclick="addToCart(this)" id="addToCartBtn" class="btn btn-light"><i class="fa  fa-shopping-cart"></i> Add to cart</button>
+                                            
+                                        </form>
+
+                                    </div>                                    
+                                </div>
+                                </div>
+                                <div class="card-body">
+                                <small>
+                                    <a class="text-muted"><%= product[1].brand %></a>
+                                </small>
+                                <strong>
+                                    <form action="/product-user-<%= (product[1].title).toLowerCase() %>" method="post">
+                                        <input type="text" style="display: none;" name="productTitleForParam2" value="<%= (product[1].title).toLowerCase() %>">
+                                    <button style="text-transform: capitalize;" class="text-body"><%= product[1].title %></button>
+                                    <div style="display: none;">
+                                        <input type="text" name="productID" value="<%= product[1]._id %>">
+                                        <input type="text" name="productCategory" value="<%= product[1].category %>">
+                                        <input type="text" style="display: none;" name="userEmail4" value="<%= signUpEmail %>">
+                                    </div>
+                                </form>
+                                </strong>
+                                <div class="price">
+                                    <!-- <span class="text-decoration-line-through">৳ 870</span> -->
+                                    <span class="text-warning">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-half-o"></i>
+                                    </span>
+                                </div>
+                                <div class="price">
+                                    <!-- <span class="text-decoration-line-through">৳ 870</span> -->
+                                    <span class="text-warning">$<%= product[1].price %></span>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                        <!-- /Product Card -->
+                        <%}%>
+                    <%}else{%>
+                        
+                        <div class="no-products">
+                            
+                            <h5><i class="fa fa-warning"></i>Sorry, No products found.</h5>
+                            
+                        </div>
+
+                    <%}%>
+
+                </div>
+            </div>
+        
+
+
+
+
+
+
+
+
+
+
 
 
         
+        
+      
+
  <!--FOOTER-->
  <footer>
     <div class="top_header">
@@ -475,11 +412,11 @@
 
 
 <!-- JAVASCRIPT -->
-<script src="js/guests/home.js"></script>
-<script src="js/guests/searchBar.js"></script>
+<script src="js/buyer/favourite.js"></script>
 <script src="js/buyer/toggleUser.js"></script>
-<!-- <script src="js/cart.js"></script> -->
-<!-- JAVASCRIPT -->
+<script src="js/guests/searchBar.js"></script>
+<script src="js/buyer/addToCart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <!-- <script src="js/home.js"></script> -->
 
 </body>

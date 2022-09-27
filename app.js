@@ -354,21 +354,35 @@ app.post('/add-to-cart', function (req, res) {
         } else {
             if (foundProduct) {
 
-
-                buyerID.updateOne({ email: userEmail }, { $push: { cart: foundProduct } }, function (err) {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        console.log('product added to cart');
+                buyerID.findOne({email: userEmail}, function(error2, foundPerson){
+                    if(error2){
+                        console.log(error2);
+                    }else{
+                        if(foundPerson){
+                           if(JSON.stringify(foundPerson.cart).includes(JSON.stringify(foundProduct._id))){
+                                res.send({ response: 'product already in cart' });
+                           }else{
+                                buyerID.updateOne({ email: userEmail }, { $push: { cart: foundProduct } }, function (err) {
+                                    if (err) {
+                                        console.log(err)
+                                    } else {
+                                        console.log('product added to cart');
+                                    }
+                                })
+                                res.send({ response: 'product added to cart' });
+                           }
+                        }
                     }
                 })
+
+               
             }
         }
     })
 
 
 
-    res.send({ response: 'product added to cart' });
+    
 
 })
 
@@ -1025,6 +1039,7 @@ app.post('/custom-user', function (req, res) {
     } else if (btnsNav === 'cart') {
 
 
+
         buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
             if (err) {
                 console.log(err)
@@ -1042,6 +1057,35 @@ app.post('/custom-user', function (req, res) {
                             signUplName: signUplName,
                             signUpEmail: signUpEmail,
                             cart: cart
+                        })
+                } else {
+                    console.log('user deleted i guess');
+                }
+            }
+        });
+        
+
+    }else if(btnsNav === 'favourites'){
+        
+        buyerID.findOne({ email: signUpEmail }, function (err, foundUser) {
+            if (err) {
+                console.log(err)
+            } else {
+                if (foundUser) {
+    
+    
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const signUpEmail = foundUser.email;
+                    const favourites = foundUser.favourites;
+                    const user = foundUser;
+                    res.render('buyer/favourites',
+                        {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            favourites: favourites,
+                            user: user
                         })
                 } else {
                     console.log('user deleted i guess');
