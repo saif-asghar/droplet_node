@@ -618,6 +618,8 @@ app.post('/products-user', function (req, res) {
 
 app.post('/products-categories', function (req, res) {
 
+    let page = 1;
+    let limit = 12;
 
 
     function findDB(categoryName) {
@@ -657,7 +659,7 @@ app.post('/products-categories', function (req, res) {
                 // console.log(foundItems);
                 res.render('guest/products', { foundItemsNew: foundItemsNew })
             }
-        })
+        }).skip((page - 1) * limit).limit(limit);
     }
     else if (category === 'smartphones') {
         findDB(['smartphones']);

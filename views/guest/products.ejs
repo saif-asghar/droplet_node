@@ -122,8 +122,8 @@
 
                     <%if(foundItemsNew.length > 0){%>
                         <%for (const product of Object.entries(foundItemsNew)){%>
-                            <form class="col-lg-3" action="/products-<%= (product[1].title).toLowerCase() %>" method="post">
-                                <input type="text" style="display: none;" name="productTitleForParam" value="<%= (product[1].title).toLowerCase() %>">
+                            <div class="col-lg-3">
+                            
                         <!-- Product Card -->
                         <div id="productCard">
                             <div class="product_card">
@@ -133,7 +133,7 @@
                                 <div class="card-overlay">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                     <button type="button" class="btn btn-secondary"><i class="fa fa-heart"></i></button>
-                                    <button type="submit" class="btn btn-light"><i class="fa fa-shopping-cart"></i> Add to cart</button>
+                                    <button type="button" class="btn addToCartButton2 btn-light"><i class="fa fa-shopping-cart"></i> Add to cart</button>
                                     </div>
                                 </div>
                                 <!-- <div class="details-btn">
@@ -145,7 +145,14 @@
                                     <a class="text-muted"><%= product[1].brand %></a>
                                 </small>
                                 <strong>
+                                    <form  action="/products-<%= (product[1].title).toLowerCase() %>" method="post">
+                                        <input type="text" style="display: none;" name="productTitleForParam" value="<%= (product[1].title).toLowerCase() %>">
                                     <button style="text-transform: capitalize;" class="text-body"><%= product[1].title %></button>
+                                    <div style="display: none;">
+                                        <input type="text" name="productID" value="<%= product[1]._id %>">
+                                        <input type="text" name="productCategory" value="<%= product[1].category %>">
+                                    </div>
+                                </form>
                                 </strong>
                                 <div class="price">
                                     <!-- <span class="text-decoration-line-through">৳ 870</span> -->
@@ -165,12 +172,9 @@
                             </div>
                             </div>
                         </div>
-                        <div style="display: none;">
-                            <input type="text" name="productID" value="<%= product[1]._id %>">
-                            <input type="text" name="productCategory" value="<%= product[1].category %>">
-                        </div>
-                        <!-- /Product Card -->
-                    </form>
+                        
+                </div>
+                <!-- /Product Card -->
                         <%}%>
                     <%}else{%>
                         
@@ -188,6 +192,8 @@
 
 
 
+            <button>previous</button>
+            <button style="float: right;">next</button>
 
 
 
