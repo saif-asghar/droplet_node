@@ -10,6 +10,7 @@ const _ = require('lodash');
 const { escapeRegExp } = require("lodash");
 const md5 = require('md5');
 const reload = require('reload');
+const mongoosePaginate = require('mongoose-paginate-v2');
 require("./conn/db");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by NodeJs END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -50,9 +51,10 @@ const techitemScehma = new mongoose.Schema({
     brand: String,
     category: String,
     thumbnail: String,
-    images: Array,
+    images: Array
 });
 
+techitemScehma.plugin(mongoosePaginate);
 const Techitem = mongoose.model("Techitem", techitemScehma);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                          { Product Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -90,7 +92,38 @@ const signupSchema = new mongoose.Schema({
 });
 
 const buyerID = mongoose.model("buyerID", signupSchema);
-// const sellerID = mongoose.model("sellerID", signupSchema);
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                4. { ID Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+const signupSellerSchema = new mongoose.Schema({
+    fname: {
+        type: String,
+        required: true
+    },
+    lname: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
+});
+
+const sellerID = mongoose.model("sellerID", signupSellerSchema);
+
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -478,40 +511,52 @@ app.post('/remove-product', function (req, res) {
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+// let pageNo = 0; 
 app.post('/products', function (req, res) {
-
+    // .skip((page - 1) * limit).limit(limit);
+    // pageNo++;
+     
+    // Page.updateOne(
+    //     {_id: '63348f77d71cd193137e4056'},
+    //     { page: pageNo },
+    //     function(err){
+    //         if(err){
+        //             console.log(err);
+        //         }else{
+            //             console.log('success');
+            //         }
+            //     }
+            // )
+            
+            // let page = 1;
+            // let limit = 12;
+            // Page.findOne({_id: '63348f77d71cd193137e4056'}, function(error4, pageNumber){
+        // })
+    
     let searchedProduct = req.body.searchProduct;
     searchedProduct = searchedProduct.toLowerCase();
 
-    Techitem.find({}, function (err, foundItems) {
+    
+        Techitem.find({}, function (err, foundItems) {
+            let foundItemsNew = [];
+            // console.log(foundItems);
+            if (searchedProduct.length > 0) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    for (const item of foundItems) {
 
-        let foundItemsNew = [];
-
-        if (searchedProduct.length > 0) {
-            if (err) {
-                console.log(err);
-            } else {
-
-
-
-                for (const item of foundItems) {
-
-                    if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
-                        foundItemsNew.push(item);
+                        if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
+                            foundItemsNew.push(item);
+                        }
                     }
-
+                    res.render('guest/products', { foundItemsNew: foundItemsNew, searchedProduct: searchedProduct })
+                    
                 }
-                // console.log(foundItemsNew);
-                res.render('guest/products', { foundItemsNew: foundItemsNew })
+            } else {
+                res.render('guest/products', { foundItemsNew: foundItemsNew });
             }
-        } else {
-
-            res.render('guest/products', { foundItemsNew: foundItemsNew });
-
-        }
-    })
-
+        })
 });
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -618,9 +663,9 @@ app.post('/products-user', function (req, res) {
 
 app.post('/products-categories', function (req, res) {
 
-    let page = 1;
-    let limit = 12;
-
+    // let page = 1;
+    // let limit = 12;
+    // .skip((page - 1) * limit).limit(limit);
 
     function findDB(categoryName) {
         Techitem.find({ category: categoryName }, function (err, foundItemsNew) {
@@ -659,7 +704,7 @@ app.post('/products-categories', function (req, res) {
                 // console.log(foundItems);
                 res.render('guest/products', { foundItemsNew: foundItemsNew })
             }
-        }).skip((page - 1) * limit).limit(limit);
+        })
     }
     else if (category === 'smartphones') {
         findDB(['smartphones']);
