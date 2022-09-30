@@ -356,8 +356,17 @@
                                 <!-- /Product Card -->
                                 <%}%>
                                 <div class="container">
-                                    <div class="row">                                    
+                                    <div id="pagination-buttons" class="row">                                    
 
+                                        <div class="page-numbers">
+                                            <%if(foundItemsNew.length > 12){%>
+                                                
+                                                    <%for(i = 1; i <= Math.ceil(foundItemsNew.length / 12); i++){%>
+                                                    <span class="pagination-page-numbers"><%= i %></span>
+                                                    <%}%>
+                                                
+                                            <%}%>
+                                        </div>
                                         <button onclick="nextPage(this)" style="display: inline-block; width: 70px;">Next</button>                                        
 
                                     </div>
