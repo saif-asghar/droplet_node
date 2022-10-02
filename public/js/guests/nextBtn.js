@@ -22,7 +22,6 @@ if(paginationButtonsNumbers.length > 3){
     pageNumbersDiv.appendChild(nextPageDots);
 }
 
-// paginationButtonsNumbers = document.querySelectorAll('.pagination-page-numbers');
 paginationButtonsNumbers[0].classList.add('slected-page');
 
 function nextPage(e){
@@ -100,6 +99,7 @@ function nextPage(e){
     const nextPageDots = document.createElement('span');
     nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
     nextPageDots.innerHTML = `...`;
+    
 
     if(page === 4){
 
@@ -238,8 +238,131 @@ function prevPage(e){
         e.remove();
     }
 
-    
     paginationButtonsNumbers[page].classList.remove('slected-page');
     paginationButtonsNumbers[page - 1].classList.add('slected-page');
+
+    if(page == (paginationButtonsNumbers.length - 3)){
+        paginationButtonsNumbers[page + 2].classList.add('hidden-display');
+    }
+
+    if(page == 3){
+        paginationButtonsNumbers[0].classList.remove('hidden-display');
+        pageNumbersDiv.childNodes[0].remove();
+        if(page == (paginationButtonsNumbers.length - 6)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length - 4].classList.add('hidden-display');
+        }
+    }else if(page == 2){
+        if(page == (paginationButtonsNumbers.length - 7)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length - 5].classList.add('hidden-display');
+        }
+    }else if(page == 1){
+        if(page == (paginationButtonsNumbers.length - 8)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length - 6].classList.add('hidden-display');
+        }
+    }
+    else if(page == 4){
+        paginationButtonsNumbers[1].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+        if(page == (paginationButtonsNumbers.length - 5)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length - 3].classList.add('hidden-display');
+        }
+    }else if(page == 5){
+        paginationButtonsNumbers[2].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+        if(page == (paginationButtonsNumbers.length - 4)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length - 2].classList.add('hidden-display');
+        }
+    }else if(page == 6){
+        paginationButtonsNumbers[3].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+        if(page == (paginationButtonsNumbers.length - 3)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length - 1].classList.add('hidden-display');
+        }
+    }else if(page == 7){
+        paginationButtonsNumbers[4].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+        if(page == (paginationButtonsNumbers.length - 2)){
+            paginationButtonsNumbers[paginationButtonsNumbers.length].classList.add('hidden-display');
+        }
+    }else if(page == 8){
+        paginationButtonsNumbers[5].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+    }else if(page == 9){
+        paginationButtonsNumbers[6].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+    }else if(page == 10){
+        paginationButtonsNumbers[7].classList.remove('hidden-display');
+        if(page == (paginationButtonsNumbers.length - 3)){
+            const nextPageDots = document.createElement('span');
+            nextPageDots.setAttribute('class', 'next-page-dots pagination-page-numbers');
+            nextPageDots.innerHTML = `...`;
+            pageNumbersDiv.appendChild(nextPageDots);
+            paginationButtonsNumbers[4].classList.remove('hidden-display');
+        }
+    }
+    // else if(page == 4){
+    //     paginationButtonsNumbers[1].classList.remove('hidden-display');
+    // }else if(page == 5){
+    //     paginationButtonsNumbers[2].classList.remove('hidden-display');
+    // }else if(page == 6){
+    //     paginationButtonsNumbers[3].classList.remove('hidden-display');
+    // }else if(page == 7){
+    //     paginationButtonsNumbers[4].classList.remove('hidden-display');
+    // }else if(page == 9){
+    //     paginationButtonsNumbers[6].classList.remove('hidden-display');
+    // }else if(page == 10){
+    //     paginationButtonsNumbers[7].classList.remove('hidden-display');
+    // }else if(page == 11){
+    //     paginationButtonsNumbers[8].classList.remove('hidden-display');
+    // }
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
 }

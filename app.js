@@ -119,7 +119,38 @@ const signupSellerSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    store: {
+        brand: {
+            type: String
+        },
+        type: {
+            type: String
+        },
+        logo: {
+            type: String
+        },
+        about: {
+            type: String
+        },
+        myProducts: [
+            techitemScehma
+        ],
+        customers: [
+            {
+                name: {
+                    type: String
+                },
+                address: {
+                    type: String
+                },
+                contact: {
+                    type: String
+                }
+            }
+        ]
+        }
+    
 });
 
 const sellerID = mongoose.model("sellerID", signupSellerSchema);
@@ -255,12 +286,11 @@ app.post('/login-buyer', function (req, res) {
 
 app.post('/signup-seller', function (req, res) {
 
-    const foundItems = req.body.foundItems;
-
     const signUpfName = req.body.signupfName;
     const signUplName = req.body.signuplName;
     const signUpEmail = req.body.signupEmail;
     const signUpPass = req.body.signupPass;
+
 
     const identity = new sellerID({
         fname: signUpfName,
@@ -272,12 +302,11 @@ app.post('/signup-seller', function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            res.render('seller/home',
+            res.render('seller/storeInfo',
                 {
                     signUpfName: signUpfName,
                     signUplName: signUplName,
                     signUpEmail: signUpEmail,
-                    foundItems: foundItems
                 });
         };
     });
@@ -285,6 +314,60 @@ app.post('/signup-seller', function (req, res) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+
+
+
+app.post('/dashboard', function(req, res){
+
+    const signUpfName = req.body.signUpfName;
+    const signUplName = req.body.signUplName;
+    const signUpEmail = req.body.signUpEmail;
+    const storeName = req.body.storename;
+    const storeDescription = req.body.storeDescription;
+    const storeType = req.body.storeType;
+
+    sellerID.updateOne(
+            {email: signUpEmail}, 
+            {store: {brand: storeName}},
+            function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log('store name added to database');
+                }
+            }
+    )    
+    sellerID.updateOne(
+            {email: signUpEmail}, 
+            {store: {type: storeType}},
+            function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log('store type added to database');
+                }
+            }
+    )    
+    sellerID.updateOne(
+            {email: signUpEmail}, 
+            {store: {about: storeDescription}},
+            function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log('store info added to database');
+                }
+            }
+    )    
+
+    res.render('seller/dashboard', {
+        signUpfName: signUpfName,
+        signUpfName: signUpfName,
+        signUpEmail: signUpEmail,
+        storeName: storeName
+    });
+})
 
 
 
@@ -310,9 +393,13 @@ app.post('/login-seller', function (req, res) {
                     const signUplName = foundUser.lname;
                     const signUpEmail = loginEmail;
 
+                    res.render('seller/dashboard', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail
+                    })
 
-                    res.render('seller/home');
-                } else {
+                }else {
                     console.log('incorrect pass');
                 }
             } else {
@@ -537,26 +624,25 @@ app.post('/products', function (req, res) {
     searchedProduct = searchedProduct.toLowerCase();
 
     
-        Techitem.find({}, function (err, foundItems) {
-            let foundItemsNew = [];
-            // console.log(foundItems);
-            if (searchedProduct.length > 0) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    for (const item of foundItems) {
-
-                        if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
-                            foundItemsNew.push(item);
-                        }
-                    }
-                    res.render('guest/products', { foundItemsNew: foundItemsNew, searchedProduct: searchedProduct })
-                    
-                }
+    Techitem.find({}, function (err, foundItems) {
+        let foundItemsNew = [];
+        if (searchedProduct.length > 0) {
+            if (err) {
+                console.log(err);
             } else {
-                res.render('guest/products', { foundItemsNew: foundItemsNew });
+                for (const item of foundItems) {
+
+                    if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
+                        foundItemsNew.push(item);
+                    }
+                }
+                res.render('guest/products', { foundItemsNew: foundItemsNew, searchedProduct: searchedProduct })
+                
             }
-        })
+        } else {
+            res.render('guest/products', { foundItemsNew: foundItemsNew });
+        }
+    })
 });
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
