@@ -302,7 +302,7 @@ app.post('/signup-seller', function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            res.render('seller/storeInfo',
+            res.render('seller/storeInfo2',
                 {
                     signUpfName: signUpfName,
                     signUplName: signUplName,
@@ -323,47 +323,25 @@ app.post('/dashboard', function(req, res){
     const signUpfName = req.body.signUpfName;
     const signUplName = req.body.signUplName;
     const signUpEmail = req.body.signUpEmail;
-    const storeName = req.body.storename;
+    const storeName = req.body.storeName;
     const storeDescription = req.body.storeDescription;
     const storeType = req.body.storeType;
 
-    sellerID.updateOne(
+    sellerID.updateMany(
             {email: signUpEmail}, 
-            {store: {brand: storeName}},
+            {store: {brand: storeName, type: storeType, about: storeDescription}},
             function(err){
                 if(err){
                     console.log(err);
                 }else{
-                    console.log('store name added to database');
-                }
-            }
-    )    
-    sellerID.updateOne(
-            {email: signUpEmail}, 
-            {store: {type: storeType}},
-            function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log('store type added to database');
-                }
-            }
-    )    
-    sellerID.updateOne(
-            {email: signUpEmail}, 
-            {store: {about: storeDescription}},
-            function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    console.log('store info added to database');
+                    console.log('all added to database');
                 }
             }
     )    
 
     res.render('seller/dashboard', {
         signUpfName: signUpfName,
-        signUpfName: signUpfName,
+        signUplName: signUplName,
         signUpEmail: signUpEmail,
         storeName: storeName
     });
