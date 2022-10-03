@@ -19,16 +19,19 @@
 
             <form id="dashboardSeller" action="/dashboard" method="post">
                 <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
-                <a href="javascript:void(0)" onclick="document.getElementById('dashboardSeller').submit();" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
+                <a href="javascript:void(0)" onclick="document.getElementById('dashboardSeller').submit();" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
                     <span class="fa fa-th-large"></span>
                     <span class="ml-2">Dashboard</span>
                 </a>
             </form>
 
-              <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
+            <form id="productSeller" action="/products-seller" method="post">
+              <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
+              <a href="javascript:void(0)" onclick="document.getElementById('productSeller').submit();" class="list-group-item list-group-item-action active border-0 align-items-center">
                 <span class="fa fa-th"></span>
                 <span class="ml-2">Products</span>
               </a>
+            </form>
       
               <a class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center" href="#sale-collapse" role="button" aria-expanded="false" data-bs-toggle="collapse" aria-controls="sale-collapse">
                 <div>
@@ -70,12 +73,43 @@
               
             <!-- main content -->
             <main class="container-fluid">
-              <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
-                    <div class="container">
-                        <h1 class="display-4 mb-2 text-primary">Store Name</h1>
-                        <p class="lead text-muted">Simple Admin Dashboard with Bootstrap.</p>
-                    </div>
+
+              <div class="jumbotron-fluid rounded bg-white border-0 shadow-sm border-left py-4">
+                <div class="container">
+
+                  <button class="btn btn-outline-secondary mb-3 float-right"><i class="fa fa-plus" style="margin-right: 10px;"></i>Add Product</button>
+                                
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%if(myProducts.length === 0){%>
+                        <tr>
+                          <th scope="row"></th>
+                          <td>No Products</td>
+                        </tr>
+                      <%}else{%>
+                        <%for(const product of Object.entries(myProducts)){%>
+                          <tr>
+                            <th scope="row"><%=product[0] + 1%></th>
+                            <td>
+                              <img width="30" height="30" class="border" style="padding: 2px;" src="pics/Adidaslogo.webp" alt="">
+                              <%=product[1].title%>
+                            </td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                        <%}}%>
+                    </tbody>
+                  </table>
                 </div>
+
             </main>
           </div>
         </div>

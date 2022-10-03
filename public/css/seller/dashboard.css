@@ -83,3 +83,44 @@ article:hover a{
 #dashboardSeller{
   margin-bottom: 0 !important;
 }
+
+
+
+/* Doughnut */
+
+canvas {
+  background: white;
+  display: inline !important;
+}
+
+.card-doughnut{
+  width: 350px;
+  display: inline-block;
+  /* background: black; */
+  background: white;
+  /* border-right: 1px solid silver; */
+  /* border: 2px solid silver; */
+  /* display: flex;  */
+  /* justify-content: center;  */
+  /* align-items: center; */
+  
+}
+
+/* .card-doughnut:first-child{
+  border-left: 1px solid silver;
+} */
+/* .card-doughnut:not(:first-child){
+  border-left: 1px solid silver;
+} */
+
+.container-doughnut {
+  margin: auto;
+  width: 330px;
+  min-height: 500px;
+}
+
+header {
+  font-family: 'Arial';
+  font-size: 1.8rem;
+  padding: 10px 0;
+}

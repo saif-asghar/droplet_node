@@ -769,9 +769,30 @@ app.post('/products-seller', function (req, res) {
     
     const signUpEmail = req.body.signUpEmail;
 
-    res.render('seller/myProducts', {
-        signUpEmail: signUpEmail
-    });
+    sellerID.findOne({email: signUpEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                const signUpfName = foundUser.fname;
+                const signUplName = foundUser.lname;
+                const storeName = foundUser.store.brand;
+                const storeType = foundUser.store.type;
+                const storeDescription = foundUser.store.about;
+                const myProducts = foundUser.store.myProducts;
+
+                res.render('seller/myProducts', {
+                    signUpfName: signUpfName,
+                    signUplName: signUplName,
+                    signUpEmail: signUpEmail,
+                    storeName: storeName,
+                    storeType: storeType,
+                    storeDescription: storeDescription,
+                    myProducts: myProducts
+                });
+            }
+        }
+    })
 });
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
