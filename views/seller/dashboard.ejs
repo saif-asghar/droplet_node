@@ -10,28 +10,35 @@
 </head>
 <body>
     
+
     <div class="container-fluid">
         <div class="row">
           <!-- sidebar -->
           <div class="col-md-3 col-lg-2 px-0 position-fixed h-100 bg-white shadow-sm sidebar" id="sidebar">
             <h1 class="text-primary d-flex my-4 justify-content-center"><img src="./pics/logoCorrect.jpg" alt="LOGO"></h1>
-            <div class="list-group rounded-0">
+            <div class="list-group rounded-0">              
+
               <a href="#" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
                 <span class="fa fa-th-large"></span>
                 <span class="ml-2">Dashboard</span>
               </a>
-              <a href="#" class="list-group-item list-group-item-action border-0 align-items-center">
-                <span class="fa fa-th"></span>
-                <span class="ml-2">Products</span>
-              </a>
-      
+
+              <form id="productSeller" action="/products-seller" method="post">
+                <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
+                <a href="javascript:void(0)" onclick="document.getElementById('productSeller').submit();" class="list-group-item list-group-item-action border-0 align-items-center">
+                  <span class="fa fa-th"></span>
+                  <span class="ml-2">Products</span>
+                </a>
+              </form>
+
               <a class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center" href="#sale-collapse" role="button" aria-expanded="false" data-bs-toggle="collapse" aria-controls="sale-collapse">
                 <div>
                   <span class="fa fa-cart-dash"></span>
                   <span class="ml-2">Sales</span>
                 </div>
                 <span class="fa fa-chevron-down small"></span>
-            </a>
+              </a>
+
               <div class="collapse collapse-sales-bar" id="sale-collapse" data-parent="#sidebar">
                 <div class="list-group">
                   <a href="#" class="list-group-item list-group-item-action border-0 pl-5">Customers</a>
@@ -64,9 +71,8 @@
               
             <!-- main content -->
             <main class="container-fluid">
-              <section class="row">
+              <!-- <section class="row">
                 <div class="col-md-6 col-lg-4">
-                  <!-- card -->
                   <article class="p-4 rounded shadow-sm border-left mb-4">
                     <a href="#" class="d-flex align-items-center">
                       <span class="fa fa-box h5"></span>
@@ -90,14 +96,14 @@
                     </a>
                   </article>
                 </div>
-              </section>
+              </section> -->
               
               <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
-        <div class="container">
-          <h1 class="display-4 mb-2 text-primary"><%=storeName%></h1>
-          <p class="lead text-muted">Simple Admin Dashboard with Bootstrap.</p>
-        </div>
-      </div>
+              <div class="container">
+                <h1 class="display-4 mb-2 text-primary"><%=storeName%></h1>
+                <p class="lead text-muted">Simple Admin Dashboard with Bootstrap.</p>
+              </div>
+            </div>
             </main>
           </div>
         </div>

@@ -318,34 +318,72 @@ app.post('/signup-seller', function (req, res) {
 
 
 
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 app.post('/dashboard', function(req, res){
 
-    const signUpfName = req.body.signUpfName;
-    const signUplName = req.body.signUplName;
     const signUpEmail = req.body.signUpEmail;
-    const storeName = req.body.storeName;
-    const storeDescription = req.body.storeDescription;
-    const storeType = req.body.storeType;
+    console.log(signUpEmail);
+    
+    sellerID.findOne({email: signUpEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                if(foundUser.store['brand']){
 
-    sellerID.updateMany(
-            {email: signUpEmail}, 
-            {store: {brand: storeName, type: storeType, about: storeDescription}},
-            function(err){
-                if(err){
-                    console.log(err);
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const storeName = foundUser.store.brand;
+                    const storeType = foundUser.store.type;
+                    const storeDescription = foundUser.store.about;
+
+                    res.render('seller/dashboard', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription
+                    });
+
                 }else{
-                    console.log('all added to database');
+                    
+                    const signUpfName = req.body.signUpfName;
+                    const signUplName = req.body.signUplName;
+                    const storeName = req.body.storeName;
+                    const storeDescription = req.body.storeDescription;
+                    const storeType = req.body.storeType;
+
+                    
+                    sellerID.updateMany(
+                        {email: signUpEmail}, 
+                        {store: {brand: storeName, type: storeType, about: storeDescription}},
+                        function(err){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                console.log('all added to database');
+                            }
+                        }
+                    ) 
+                                           
+                    res.render('seller/dashboard', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription
+                    });
                 }
             }
-    )    
-
-    res.render('seller/dashboard', {
-        signUpfName: signUpfName,
-        signUplName: signUplName,
-        signUpEmail: signUpEmail,
-        storeName: storeName
-    });
+        }
+    })
+                    
+                 
 })
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 
@@ -716,6 +754,24 @@ app.post('/products-user', function (req, res) {
         }
     })
 
+});
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/products-seller', function (req, res) {
+    
+    const signUpEmail = req.body.signUpEmail;
+
+    res.render('seller/myProducts', {
+        signUpEmail: signUpEmail
+    });
 });
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

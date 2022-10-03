@@ -75,3 +75,11 @@ article:hover a{
   color: gray;
   text-decoration: none;
 }
+
+#productSeller{
+  margin-bottom: 0 !important;
+}
+
+#dashboardSeller{
+  margin-bottom: 0 !important;
+}
