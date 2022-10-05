@@ -56,12 +56,11 @@
                         <div id="navdrop" class="btn-dark">
                             <div class="drop-btn">
                                 <a id="menu" tooltipped="" href="#!">
-                                    <p class="persons-usersname"><span><%= signUpfName %></span></p>
+                                    <p class="persons-usersname">hello, <span><%= signUpfName %></span></p>
                                 </a>
                             </div>
                             <div class="tooltip"></div>
                             <div class="wrapper">
-                                
                                 <ul class="menu-bar" style="margin-left: 0px;">
                                     <li class="profile-dsf3SD_02-1SAd9">
                                         <a href="#">
@@ -69,53 +68,10 @@
                                                 <!-- <p class="fa fa-plane" aria-hidden="true"></p> -->
                                                 
                                                 <span id="ch_head_name"><%= signUpfName + ' ' + signUplName %></span>
-                                                <br>
-                                                <span id="head_manage_acc">Manage Settings</span>
                                             </div>
                                         </a>
                                     </li>
-                                    <hr>
-                                    <li class="feed-dsf3SD_02-1SAd9">
-                                        <a href="#">
-                                            <div class="icon2">
-                                                <span class="fa fa-commenting material-icons" aria-hidden="true"></span>
-                                            </div>
-                                            <div>
-                                                <span id="feed-title">Give Feedback</span>
-                                                <br>
-                                                <span id="feed-subject">Help us improve the new Facebook</span>
-                                            </div>
-                                        </a>
-                                    </li>                                    
-                                    <hr>                                
-                                    
-                                        <li class="setting-item">
-                                            <a href="javascript:void(0)">
-                                                <div class="icon2">
-                                                    <span class="fa fa-heart"></span>
-                                                </div>
-                                                <span>My Favourites</span>                                          
-                                            </a>
-                                        </li>           
-                                    
-                                    <li class="help-item">
-                                        <a href="javascript:void(0)">
-                                            <div class="icon2">
-                                                <span class="fa fa-question" aria-hidden="true"></span>
-                                            </div>
-                                            <span>Help &amp; support&nbsp;&nbsp;</span>
-                                            <!-- <i class="fa fa-arrow-right" style="display: none;" aria-hidden="true"></i> -->
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="icon2">
-                                                <span class="fa fa-users" aria-hidden="true"></span>
-                                            </span>
-                                        </div>
-                                        <span>About us</span>
-                                    </a>
-                                </li>                                
+                                    <hr>                                                          
                                 <li>
                                     <a id="logOutBtn">
                                         <div class="icon2">
@@ -125,106 +81,7 @@
                                     <span>Log Out</span>
                                 </a>
                             </li>
-                        </ul>
-                    
-                        <ul class="theme-drop" style="display: none;">
-                            <div class="arrow">
-                                <!-- <i class=" back-theme-btn material-icons waves-effect">arrow_back</i> -->
-                                <span>&nbsp;Display &amp; Theme</span>
-                            </div>
-                            <hr>
-                            <li>
-                                <a href="javascript:void(0);" onclick="swapdark('dark.css')">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">brightness_2</span> --></div>
-                                    Dark
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" onclick="swaplight('light.css')">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">wb_sunny</span> --></div>
-                                    Light
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="setting-drop" style="display: none;">
-                            <div class="arrow">
-                                <!-- <i class=" back-setting-btn material-icons waves-effect">arrow_back</i> -->
-                                <span>&nbsp;Settings &amp; Privacy</span>
-                            </div>
-                            <hr>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">account_box</span> --></div>
-                                    Personal info
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">lock</span> --></div>
-                                    Password
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">format_list_bulleted</span> --></div>
-                                    Activity log
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">language</span> --></div>
-                                    Languages
-                                </a>
-                            </li>
-                            <li class="logout">
-                                <a href="javascript:void(0);">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">exit_to_app</span> --></div>
-                                    Signout
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="help-drop" style="display: none;">
-                            <div class="arrow">
-                                <!-- <i class=" back-help-btn material-icons waves-effect">arrow_back</i> -->
-                                <span>&nbsp;Help &amp; Support</span>
-                            </div>
-                            <hr>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">help_outline</span> --></div>
-                                    Help centre
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">contact_mail</span> --></div>
-                                    Support Inbox
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">feedback</span> --></div>
-                                    Send feedback
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <div class="icon">
-                                        <!-- <span class="material-icons">report</span> --></div>
-                                    Report problem
-                                </a>
-                            </li>
-                        </ul>
+                        </ul>                        
                     </div>
                 </div>
                     </div>

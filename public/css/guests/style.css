@@ -1389,3 +1389,42 @@
     }
 
     
+
+
+
+    .hidden-display{
+        display: none !important;
+    }
+    
+    .hidden-display2{
+        display: none;
+    }
+
+    #pagination-buttons{
+        justify-content: flex-end;
+    }
+
+    .pagination-page-numbers {
+        display: inline-block;
+        width: 40px;
+        text-align: center;
+        margin: auto 0;
+        cursor: pointer;
+        line-height: 2rem;
+    }
+
+    .pagination-page-numbers:hover{
+        background-color: gray;
+    }
+
+    .slected-page{
+        border: 1px solid black;
+        background-color: silver;
+        border-radius: 5px;
+    }
+
+    .page-numbers{
+        /* min-width: 200px; */
+        /* max-width: 240px; */
+        display: contents;
+    }

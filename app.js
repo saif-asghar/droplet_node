@@ -10,6 +10,8 @@ const _ = require('lodash');
 const { escapeRegExp } = require("lodash");
 const md5 = require('md5');
 const reload = require('reload');
+const mongoosePaginate = require('mongoose-paginate-v2');
+const multer = require('multer');
 require("./conn/db");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by NodeJs END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -29,6 +31,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
+const storage = multer.diskStorage({
+    destination : function (req, file, cb) {
+    cb (null, 'public/pics/')
+    },
+    filename : function (req, file, cb) {
+    cb (null, Date.now() + file.originalname)
+    }
+})
+
+const upload = multer({storage: storage});
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by APP END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -49,10 +61,12 @@ const techitemScehma = new mongoose.Schema({
     stock: Number,
     brand: String,
     category: String,
-    thumbnail: String,
+    thumbnail: Object,
     images: Array,
+    tags: Array
 });
 
+techitemScehma.plugin(mongoosePaginate);
 const Techitem = mongoose.model("Techitem", techitemScehma);
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                          { Product Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -90,7 +104,69 @@ const signupSchema = new mongoose.Schema({
 });
 
 const buyerID = mongoose.model("buyerID", signupSchema);
-// const sellerID = mongoose.model("sellerID", signupSchema);
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                4. { ID Schema and Model START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+const signupSellerSchema = new mongoose.Schema({
+    fname: {
+        type: String,
+        required: true
+    },
+    lname: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    store: {
+        brand: {
+            type: String
+        },
+        type: {
+            type: String
+        },
+        logo: {
+            type: String
+        },
+        about: {
+            type: String
+        }
+        },
+        myProducts: [
+            techitemScehma
+        ],
+        customers: [
+            {
+                name: {
+                    type: String
+                },
+                address: {
+                    type: String
+                },
+                contact: {
+                    type: String
+                }
+            }
+        ]
+    
+});
+
+const sellerID = mongoose.model("sellerID", signupSellerSchema);
+
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                 4. { ID Schema and Model END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -222,12 +298,11 @@ app.post('/login-buyer', function (req, res) {
 
 app.post('/signup-seller', function (req, res) {
 
-    const foundItems = req.body.foundItems;
-
     const signUpfName = req.body.signupfName;
     const signUplName = req.body.signuplName;
     const signUpEmail = req.body.signupEmail;
     const signUpPass = req.body.signupPass;
+
 
     const identity = new sellerID({
         fname: signUpfName,
@@ -239,12 +314,11 @@ app.post('/signup-seller', function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            res.render('seller/home',
+            res.render('seller/storeInfo2',
                 {
                     signUpfName: signUpfName,
                     signUplName: signUplName,
                     signUpEmail: signUpEmail,
-                    foundItems: foundItems
                 });
         };
     });
@@ -252,6 +326,79 @@ app.post('/signup-seller', function (req, res) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/dashboard', function(req, res){
+
+    const signUpEmail = req.body.signUpEmail;
+    console.log(signUpEmail);
+    
+    sellerID.findOne({email: signUpEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                if(foundUser.store['brand']){
+
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const storeName = foundUser.store.brand;
+                    const storeType = foundUser.store.type;
+                    const storeDescription = foundUser.store.about;
+                    const myProducts = foundUser.myProducts;
+
+                    res.render('seller/dashboard', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
+                    });
+
+                }else{
+                    
+                    const signUpfName = req.body.signUpfName;
+                    const signUplName = req.body.signUplName;
+                    const storeName = req.body.storeName;
+                    const storeDescription = req.body.storeDescription;
+                    const storeType = req.body.storeType;
+                    const myProducts = foundUser.myProducts;
+                    
+                    sellerID.updateMany(
+                        {email: signUpEmail}, 
+                        {store: {brand: storeName, type: storeType, about: storeDescription}},
+                        function(err){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                console.log('all added to database');
+                            }
+                        }
+                    ) 
+                                           
+                    res.render('seller/dashboard', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
+                    });
+                }
+            }
+        }
+    })
+                    
+                 
+})
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                  6. { Post Request to Save Signup Info to MongoDB Atlas and Log Into Home Page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 
@@ -277,9 +424,13 @@ app.post('/login-seller', function (req, res) {
                     const signUplName = foundUser.lname;
                     const signUpEmail = loginEmail;
 
+                    res.render('seller/dashboard', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail
+                    })
 
-                    res.render('seller/home');
-                } else {
+                }else {
                     console.log('incorrect pass');
                 }
             } else {
@@ -478,40 +629,51 @@ app.post('/remove-product', function (req, res) {
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+// let pageNo = 0; 
 app.post('/products', function (req, res) {
-
+    // .skip((page - 1) * limit).limit(limit);
+    // pageNo++;
+     
+    // Page.updateOne(
+    //     {_id: '63348f77d71cd193137e4056'},
+    //     { page: pageNo },
+    //     function(err){
+    //         if(err){
+        //             console.log(err);
+        //         }else{
+            //             console.log('success');
+            //         }
+            //     }
+            // )
+            
+            // let page = 1;
+            // let limit = 12;
+            // Page.findOne({_id: '63348f77d71cd193137e4056'}, function(error4, pageNumber){
+        // })
+    
     let searchedProduct = req.body.searchProduct;
     searchedProduct = searchedProduct.toLowerCase();
 
+    
     Techitem.find({}, function (err, foundItems) {
-
         let foundItemsNew = [];
-
         if (searchedProduct.length > 0) {
             if (err) {
                 console.log(err);
             } else {
-
-
-
                 for (const item of foundItems) {
 
                     if (item.title.toLowerCase().includes(searchedProduct) || item.description.toLowerCase().includes(searchedProduct) || item.category.toLowerCase().includes(searchedProduct)) {
                         foundItemsNew.push(item);
                     }
-
                 }
-                // console.log(foundItemsNew);
-                res.render('guest/products', { foundItemsNew: foundItemsNew })
+                res.render('guest/products', { foundItemsNew: foundItemsNew, searchedProduct: searchedProduct })
+                
             }
         } else {
-
             res.render('guest/products', { foundItemsNew: foundItemsNew });
-
         }
     })
-
 });
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -614,13 +776,128 @@ app.post('/products-user', function (req, res) {
 
 
 
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+app.post('/products-seller', upload.array('fileInput'), function (req, res) {
+    
+    const signUpEmail = req.body.signUpEmail;
+    const fileInfo = req.files;
+
+    sellerID.findOne({email: signUpEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                if(fileInfo){
+                    
+                    Techitem.count({}, function(err3, count){
+                        if(err3){
+                            console.log(err3);
+                        }else{
+                            if(count){
+                        
+                                const signUpfName = foundUser.fname;
+                                const signUplName = foundUser.lname;
+                                const storeName = foundUser.store.brand;
+                                const storeType = foundUser.store.type;
+                                const storeDescription = foundUser.store.about;
+                                const myProducts = foundUser.myProducts;
+
+                                const productCategory = req.body.productCategory;
+                                const productName = req.body.productName;
+                                const productInfo = req.body.productInfo;
+                                const productPrice = req.body.productPrice;
+                                const productStock = req.body.productStock;
+                                const productTags = req.body.productTags;
+
+                                const newProduct = {
+                                    id: (count + 1), 
+                                    title: productName, 
+                                    description: productInfo, 
+                                    price: productPrice, 
+                                    stock: productStock, 
+                                    brand: storeName, 
+                                    category: productCategory, 
+                                    images: fileInfo, tags: [productTags], 
+                                    thumbnail: fileInfo[0]
+                                }
+                                
+                                const product = new Techitem(newProduct)
+
+                                product.save(function(err4){
+                                    if(err4){
+                                        console.log(err4);
+                                    }else{
+                                        console.log('product added to database successfully');
+                                    }
+                                })
+
+                                sellerID.updateOne(
+                                    {email: signUpEmail}, 
+                                    {$push: {myProducts: newProduct}},
+                                    function(err6){
+                                        if(err6){
+                                            console.log(err6);
+                                        }else{
+                                            console.log("Product uploaded to my products");
+                                            
+                                            setTimeout(function(){
+                                                res.render('seller/dashboard', {
+                                                    signUpfName: signUpfName,
+                                                    signUplName: signUplName,
+                                                    signUpEmail: signUpEmail,
+                                                    storeName: storeName,
+                                                    storeType: storeType,
+                                                    storeDescription: storeDescription,
+                                                    myProducts: myProducts
+                                                })
+                                            }, 100)
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    })
+        
+
+                }else{
+                    
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const storeName = foundUser.store.brand;
+                    const storeType = foundUser.store.type;
+                    const storeDescription = foundUser.store.about;
+                    const myProducts = foundUser.myProducts;
+
+                    res.render('seller/myProducts', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
+                    });
+                }
+            }
+        }
+    })
+});
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 app.post('/products-categories', function (req, res) {
 
-    let page = 1;
-    let limit = 12;
-
+    // let page = 1;
+    // let limit = 12;
+    // .skip((page - 1) * limit).limit(limit);
 
     function findDB(categoryName) {
         Techitem.find({ category: categoryName }, function (err, foundItemsNew) {
@@ -659,7 +936,7 @@ app.post('/products-categories', function (req, res) {
                 // console.log(foundItems);
                 res.render('guest/products', { foundItemsNew: foundItemsNew })
             }
-        }).skip((page - 1) * limit).limit(limit);
+        })
     }
     else if (category === 'smartphones') {
         findDB(['smartphones']);
@@ -1098,6 +1375,19 @@ app.post('/custom-user', function (req, res) {
 
     }
 });
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/new-product', function(req, res){
+    const signUpEmail = req.body.signUpEmail;
+
+    res.render('seller/addProduct', {signUpEmail: signUpEmail});
+
+})
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
