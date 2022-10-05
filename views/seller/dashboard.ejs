@@ -18,13 +18,13 @@
             <h1 class="text-primary d-flex my-4 justify-content-center"><img src="./pics/logoCorrect.jpg" alt="LOGO"></h1>
             <div class="list-group rounded-0">              
 
-              <form id="dashboardSeller" action="/dashboard" method="post">
-                <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
-                <a href="javascript:void(0)" onclick="document.getElementById('dashboardSeller').submit();" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
+              
+              
+                <a href="javascript:void(0)" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
                     <span class="fa fa-th-large"></span>
                     <span class="ml-2">Dashboard</span>
                 </a>
-              </form>
+              
 
               <form id="productSeller" action="/products-seller" method="post">
                 <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
@@ -44,8 +44,8 @@
 
               <div class="collapse collapse-sales-bar" id="sale-collapse" data-parent="#sidebar">
                 <div class="list-group">
-                  <a href="#" class="list-group-item list-group-item-action border-0 pl-5">Customers</a>
-                  <a href="#" class="list-group-item list-group-item-action border-0 pl-5">Sale Orders</a>
+                  <a href="javascript:void(0)" class="list-group-item list-group-item-action border-0 pl-5">Customers</a>
+                  <a href="javascript:void(0)" class="list-group-item list-group-item-action border-0 pl-5">Sale Orders</a>
                 </div>
               </div>
             </div>
@@ -100,12 +100,20 @@
                   </article>
                 </div>
               </section> -->
+
               <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
                 <div class="container">
                   <h1 class="display-4 mb-2 text-primary"><%=storeName%></h1>
                   <p class="lead text-muted"><%=storeType%></p>
                 </div>
               </div>
+
+              <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
+                <div class="container">
+                  <p class="lead text-muted">Products: <%=myProducts.length%></p>
+                </div>
+              </div>
+
               <!-- <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
                 <div class="container">
                   <div>

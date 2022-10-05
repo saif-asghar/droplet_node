@@ -1,0 +1,569 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+    <style>
+
+        [x-cloak] {
+            display: none;
+        }
+
+        [type="checkbox"] {
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        .form-checkbox,
+        .form-radio {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+            display: inline-block;
+            vertical-align: middle;
+            background-origin: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            flex-shrink: 0;
+            color: currentColor;
+            background-color: #fff;
+            border-color: #e2e8f0;
+            border-width: 1px;
+            height: 1.4em;
+            width: 1.4em;
+        }
+
+        .form-checkbox {
+            border-radius: 0.25rem;
+        }
+
+        .form-radio {
+            border-radius: 50%;
+        }
+
+        .form-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+            border-color: transparent;
+            background-color: currentColor;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .form-radio:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+            border-color: transparent;
+            background-color: currentColor;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+		.required-error{
+			color: red;
+			font-size: 13px;
+			margin: 5px 15px;
+		}
+
+        .upload__box {
+        padding: 40px;
+        }
+        .upload__inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+        }
+        .upload__btn {
+        display: inline-block;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        min-width: 116px;
+        padding: 5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid;
+        background-color: #4045ba;
+        border-color: #4045ba;
+        border-radius: 10px;
+        line-height: 26px;
+        font-size: 14px;
+        }
+        .upload__btn:hover {
+        background-color: unset;
+        color: #4045ba;
+        transition: all 0.3s ease;
+        }
+        .upload__btn-box {
+        margin-bottom: 10px;
+        }
+        .upload__img-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+        }
+        .upload__img-box {
+        width: 169px;
+        padding: 0 10px;
+        margin-bottom: 12px;
+        }
+        .upload__img-close {
+            display: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            line-height: 24px;
+            z-index: 1;
+        cursor: pointer;
+        }
+        .upload__img-close:after {
+            content: '\2716';
+            font-size: 14px;
+        color: white;
+    }
+        .img-bg {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+            padding-bottom: 100%;
+        }
+        
+        </style>
+    <title>Droplet</title>
+</head>
+
+<body class="antialiased sans-serif bg-gray-200">
+
+<form action="/products-seller" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
+
+    <div class="max-w-3xl mx-auto px-4 py-10">
+        
+        <div id="step1">
+            
+			<div class="border-b-2 py-4 mb-5">			
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div class="flex-1">					
+                        <div class="text-lg font-bold text-gray-700 leading-tight">New Product</div>					
+					</div>
+				</div>
+			</div>
+            
+			<div class="mb-5">
+                <label for="productCategory" class="font-bold mb-1 text-gray-700 block">Product Category</label>
+				<input type="text"
+					class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+					placeholder="eg. Clothing" 
+					id="productCategory"
+					name="productCategory"
+					onkeyup="checkForEmpty(this)">
+				    <h6 id="errorPg1" class="required-error" style="display: none;">This field is required</h6>
+			</div>
+
+			<!-- Bottom Navigation -->	
+			<div class="fixed bottom-0 left-0 right-0 py-5 bg-white shadow-md">
+				<div class="max-w-3xl mx-auto px-4">
+					<div class="flex justify-between">
+						<div class="w-1/2"></div>
+						<div id="buttonStep1Next" class="w-1/2 text-right">
+							<button class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium" 
+							type="button"
+							>Next</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div id="step2" style="display: none;">
+
+			<div class="border-b-2 py-4 mb-5">			
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+					<div class="flex-1">					
+						<div class="text-lg font-bold text-gray-700 leading-tight">Tell me about your product</div>
+					</div>					
+				</div>
+			</div>
+		
+			<div class="mb-5 text-center">
+                <div class="upload__box">
+                    <div class="upload__btn-box">
+                        <label class="upload__btn">
+                        <p>Upload images</p>
+                        <input type="file" multiple="" data-max_length="4" name="fileInput" id="fileInput" class="upload__inputfile">
+                        </label>
+                    </div>
+                    <div class="upload__img-wrap"></div>
+                </div>
+			</div>
+		
+			<div class="mb-5">
+				<label for="productName" class="font-bold mb-1 text-gray-700 block">Product Name</label>
+				<input type="text"
+					class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+					id="productName"
+					name="productName">
+			</div>
+
+			<div class="mb-5">
+				<label for="productInfo" class="font-bold mb-1 text-gray-700 block">Description</label>
+				<input type="text"
+					class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+					id="productInfo"
+					name="productInfo">
+			</div>
+
+			<div class="mb-5">
+				<label for="productPrice" class="font-bold mb-1 text-gray-700 block">Price</label>
+				<input type="number"
+					class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+					id="productPrice"
+					name="productPrice">
+					<h6 id="errorPg2" class="required-error" style="display: none;">All fields are required</h6>                    
+			</div>
+
+			<!-- Bottom Navigation -->	
+			<div class="fixed bottom-0 left-0 right-0 py-5 bg-white shadow-md">
+				<div class="max-w-3xl mx-auto px-4">
+					<div class="flex justify-between">
+
+						<div class="w-1/2">
+							<button class="w-32 focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+							id="btnStep2Prev"
+							type="button"
+							>Previous</button>
+						</div>
+
+						<div class="w-1/2 text-right">
+							<button class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium" 
+							id="btnStep2Next"
+							type="button"
+							>Next</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		
+		<div id="step3" style="display: none;">
+
+			<div class="border-b-2 py-4 mb-5">			
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+					<div class="flex-1">					
+						<div class="text-lg font-bold text-gray-700 leading-tight">Tell me about your product</div>
+					</div>					
+				</div>
+			</div>
+		
+			<div class="mb-5">
+				<label for="productStock" class="font-bold mb-1 text-gray-700 block">Stock</label>
+				<input type="number"
+					class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+					id="productStock"
+					name="productStock"
+					onkeyup="checkForEmpty(this)">
+					<h6 id="errorPg3" class="required-error" style="display: none;">This field is required</h6>
+			</div>
+		
+			<div class="mb-5">
+				<label for="productTags" class="font-bold mb-1 text-gray-700 block">Tags</label>
+				<textarea rows="6" type="text"
+					class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                    placeholder="eg. shirt, white, cotton, polo, extra soft"
+					id="productTags"
+					name="productTags"></textarea>					
+			</div>
+
+			<!-- Bottom Navigation -->	
+			<div class="fixed bottom-0 left-0 right-0 py-5 bg-white shadow-md">
+				<div class="max-w-3xl mx-auto px-4">
+					<div class="flex justify-between">
+
+						<div class="w-1/2">
+							<button class="w-32 focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+							id="btnStep3Prev"
+							type="button"
+							>Previous</button>
+						</div>
+
+						<div class="w-1/2 text-right">
+							<button class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium" 
+							id="btnStep3Next"
+							type="button"
+							>Complete</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+        <div id="complete" style="display: none;">
+            <div class="bg-white rounded-lg p-10 items-center shadow">
+                <div>
+                    <div class="mx-auto w-32 h-32 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset">
+                        <img id="image" class="object-cover w-full h-32 rounded-full" :src="image" />
+                    </div>
+
+                    <h2 class="text-2xl mb-4 text-gray-800 text-center font-bold">Upload Confirmation</h2>
+
+                    <div class="text-gray-600 mb-8">
+                        
+                        <div class="mb-5">
+                            <label for="productCategoryDisable" class="font-bold mb-1 text-gray-700 block">Product Category</label>
+                            <input type="text"
+                                disabled
+                                class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"                                
+                                id="productCategoryDisable"
+                                name="productCategoryDisable">
+                        </div>
+
+                        <div class="mb-5">
+                            <label for="productNameDisable" class="font-bold mb-1 text-gray-700 block">Product Name</label>
+                            <input type="text"
+                                class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productNameDisable"
+                                name="productNameDisable"
+                                disabled>
+                        </div>
+            
+                        <div class="mb-5">
+                            <label for="productInfoDisable" class="font-bold mb-1 text-gray-700 block">Description</label>
+                            <input type="text"
+                                class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productInfoDisable"
+                                name="productInfoDisable"
+                                disabled>
+                        </div>
+            
+                        <div class="mb-5">
+                            <label for="productPriceDisable" class="font-bold mb-1 text-gray-700 block">Price</label>
+                            <input type="number"
+                                class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productPriceDisable"
+                                name="productPriceDisable"
+                                disabled>
+                        </div>
+            
+                        <div class="mb-5">
+                            <label for="productStockDisable" class="font-bold mb-1 text-gray-700 block">Stock</label>
+                            <input type="number"
+                                class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productStockDisable"
+                                name="productStockDisable"
+                                disabled>
+                        </div>
+                    
+                        <div class="mb-5">
+                            <label for="productTagsDisable" class="font-bold mb-1 text-gray-700 block">Tags</label>
+                            <textarea rows="6" type="text"
+                                class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productTagsDisable"
+                                name="productTagsDisable"
+                                disabled></textarea>
+                        </div>
+
+                    </div>
+                    
+                    <div class="flex">
+                        <button class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+                        type="submit"
+                        name="confirm"
+                        value="no"
+                        >Edit</button>
+                        
+                        <button class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+                        type="submit"
+                        name="confirm"
+                        value="yes"
+                        >Confirm</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+            
+        </div>
+        
+</form>
+
+	
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		const buttonStep1Next = document.getElementById('buttonStep1Next');
+		const step1 = document.getElementById('step1');
+		const step2 = document.getElementById('step2');
+		const productCategory = document.getElementById('productCategory');
+		const errorPg1 = document.getElementById('errorPg1');
+
+		buttonStep1Next.addEventListener('click', function(){
+
+			if(productCategory.value === ''){
+				errorPg1.removeAttribute('style');
+			}else{
+				step1.style.display = 'none';
+				step2.removeAttribute('style');
+			}
+
+		})
+
+
+		const step3 = document.getElementById('step3');
+		const btnStep2Next = document.getElementById('btnStep2Next');
+		const btnStep2Prev = document.getElementById('btnStep2Prev');
+		const productName = document.getElementById('productName');
+		const productInfo = document.getElementById('productInfo');
+		const productPrice = document.getElementById('productPrice');
+		const errorPg2 = document.getElementById('errorPg2');
+
+		btnStep2Prev.addEventListener('click', function(){
+			step2.style.display = 'none';
+			step1.removeAttribute('style');
+		})
+
+		btnStep2Next.addEventListener('click', function(){
+			
+			if(productName.value === '' || productInfo.value === '' || productPrice.value === ''){
+				errorPg2.removeAttribute('style');
+			}else{
+				step3.removeAttribute('style');
+				step2.style.display = 'none';
+			}
+
+		})
+
+
+		const complete = document.getElementById('complete');		
+		const btnStep3Prev = document.getElementById('btnStep3Prev');
+		const btnStep3Next = document.getElementById('btnStep3Next');
+		const productStock = document.getElementById('productStock');
+		const productTags = document.getElementById('productTags');
+		const errorPg3 = document.getElementById('errorPg3');
+		const productCategoryDisable = document.getElementById('productCategoryDisable');
+		const productNameDisable = document.getElementById('productNameDisable');
+		const productInfoDisable = document.getElementById('productInfoDisable');
+		const productPriceDisable = document.getElementById('productPriceDisable');
+		const productStockDisable = document.getElementById('productStockDisable');
+		const productTagsDisable = document.getElementById('productTagsDisable');
+        
+
+		btnStep3Prev.addEventListener('click', function(){
+			step3.style.display = 'none';
+			step2.removeAttribute('style');
+		})
+
+		btnStep3Next.addEventListener('click', function(){
+			
+			if(productStock.value === ''){
+				errorPg3.removeAttribute('style');
+			}else{
+                productCategoryDisable.value = productCategory.value;
+                productNameDisable.value = productName.value;
+                productInfoDisable.value = productInfo.value;
+                productPriceDisable.value = productPrice.value;
+                productStockDisable.value = productStock.value;
+                productTagsDisable.value = productTags.value;
+
+				step3.style.display = 'none';
+				complete.removeAttribute('style');
+			}
+		})
+
+
+        function checkForEmpty(e){
+            if(e.value === ''){
+                e.parentNode.lastElementChild.removeAttribute('style');
+            }else{
+                e.parentNode.lastElementChild.style.display = 'none';
+            }
+        }
+
+
+        jQuery(document).ready(function () {
+        ImgUpload();
+        });
+
+        function ImgUpload() {
+        var imgWrap = "";
+        var imgArray = [];
+
+        $('.upload__inputfile').each(function () {
+            $(this).on('change', function (e) {
+            imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
+            var maxLength = $(this).attr('data-max_length');
+
+            var files = e.target.files;
+            var filesArr = Array.prototype.slice.call(files);
+            var iterator = 0;
+            filesArr.forEach(function (f, index) {
+
+                if (!f.type.match('image.*')) {
+                return;
+                }
+
+                if (imgArray.length > maxLength) {
+                return false
+                } else {
+                var len = 0;
+                for (var i = 0; i < imgArray.length; i++) {
+                    if (imgArray[i] !== undefined) {
+                    len++;
+                    }
+                }
+                if (len > maxLength) {
+                    return false;
+                } else {
+                    imgArray.push(f);
+
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                    var html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
+                    imgWrap.append(html);
+                    iterator++;
+                    }
+                    reader.readAsDataURL(f);
+                }
+                }
+            });
+            });
+        });
+
+        $('body').on('click', ".upload__img-close", function (e) {
+            var file = $(this).parent().data("file");
+            for (var i = 0; i < imgArray.length; i++) {
+            if (imgArray[i].name === file) {
+                imgArray.splice(i, 1);
+                break;
+            }
+            }
+            $(this).parent().parent().remove();
+        });
+        }
+	</script>
+</body>
+</html>

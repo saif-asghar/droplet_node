@@ -25,13 +25,13 @@
                 </a>
             </form>
 
-            <form id="productSeller" action="/products-seller" method="post">
-              <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
-              <a href="javascript:void(0)" onclick="document.getElementById('productSeller').submit();" class="list-group-item list-group-item-action active border-0 align-items-center">
+            <!-- <form id="productSeller" action="/products-seller" method="post"> -->
+              
+              <a href="javascript:void(0)" class="list-group-item list-group-item-action active border-0 align-items-center">
                 <span class="fa fa-th"></span>
                 <span class="ml-2">Products</span>
               </a>
-            </form>
+            <!-- </form> -->
       
               <a class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center" href="#sale-collapse" role="button" aria-expanded="false" data-bs-toggle="collapse" aria-controls="sale-collapse">
                 <div>
@@ -43,8 +43,8 @@
 
               <div class="collapse collapse-sales-bar" id="sale-collapse" data-parent="#sidebar">
                 <div class="list-group">
-                  <a href="#" class="list-group-item list-group-item-action border-0 pl-5">Customers</a>
-                  <a href="#" class="list-group-item list-group-item-action border-0 pl-5">Sale Orders</a>
+                  <a href="javascript:void(0)" class="list-group-item list-group-item-action border-0 pl-5">Customers</a>
+                  <a href="javascript:void(0)" class="list-group-item list-group-item-action border-0 pl-5">Sale Orders</a>
                 </div>
               </div>
             </div>
@@ -77,7 +77,10 @@
               <div class="jumbotron-fluid rounded bg-white border-0 shadow-sm border-left py-4">
                 <div class="container">
 
-                  <button class="btn btn-outline-secondary mb-3 float-right"><i class="fa fa-plus" style="margin-right: 10px;"></i>Add Product</button>
+                  <form action="/new-product" method="post">
+                    <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
+                    <button type="submit" class="btn btn-outline-secondary mb-3 float-right"><i class="fa fa-plus" style="margin-right: 10px;"></i>Add Product</button>
+                  </form>
                                 
                   <table class="table">
                     <thead>
@@ -89,22 +92,25 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <%if(myProducts.length === 0){%>
+                      <%if(myProducts.length < 1){%>
                         <tr>
                           <th scope="row"></th>
                           <td>No Products</td>
                         </tr>
-                      <%}else{%>
+                      <%}else if(myProducts.length > 0){%>
+
                         <%for(const product of Object.entries(myProducts)){%>
+
                           <tr>
-                            <th scope="row"><%=product[0] + 1%></th>
+                            <th scope="row"><%=Number(product[0]) + 1%></th>
                             <td>
-                              <img width="30" height="30" class="border" style="padding: 2px;" src="pics/Adidaslogo.webp" alt="">
+                              <img width="30" height="30" style="border-radius: 5px;" src="pics/<%=product[1].thumbnail.filename%>" alt="">
                               <%=product[1].title%>
                             </td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <td>$<%=product[1].price%></td>
+                            <td><%=product[1].stock%></td>
                           </tr>
+
                         <%}}%>
                     </tbody>
                   </table>

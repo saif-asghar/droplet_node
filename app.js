@@ -11,6 +11,7 @@ const { escapeRegExp } = require("lodash");
 const md5 = require('md5');
 const reload = require('reload');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const multer = require('multer');
 require("./conn/db");
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by NodeJs END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -30,6 +31,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
+const storage = multer.diskStorage({
+    destination : function (req, file, cb) {
+    cb (null, 'public/pics/')
+    },
+    filename : function (req, file, cb) {
+    cb (null, Date.now() + file.originalname)
+    }
+})
+
+const upload = multer({storage: storage});
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               { Requirements by APP END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -50,8 +61,9 @@ const techitemScehma = new mongoose.Schema({
     stock: Number,
     brand: String,
     category: String,
-    thumbnail: String,
-    images: Array
+    thumbnail: Object,
+    images: Array,
+    tags: Array
 });
 
 techitemScehma.plugin(mongoosePaginate);
@@ -132,6 +144,7 @@ const signupSellerSchema = new mongoose.Schema({
         },
         about: {
             type: String
+        }
         },
         myProducts: [
             techitemScehma
@@ -149,7 +162,6 @@ const signupSellerSchema = new mongoose.Schema({
                 }
             }
         ]
-        }
     
 });
 
@@ -337,6 +349,7 @@ app.post('/dashboard', function(req, res){
                     const storeName = foundUser.store.brand;
                     const storeType = foundUser.store.type;
                     const storeDescription = foundUser.store.about;
+                    const myProducts = foundUser.myProducts;
 
                     res.render('seller/dashboard', {
                         signUpfName: signUpfName,
@@ -344,7 +357,8 @@ app.post('/dashboard', function(req, res){
                         signUpEmail: signUpEmail,
                         storeName: storeName,
                         storeType: storeType,
-                        storeDescription: storeDescription
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
                     });
 
                 }else{
@@ -354,7 +368,7 @@ app.post('/dashboard', function(req, res){
                     const storeName = req.body.storeName;
                     const storeDescription = req.body.storeDescription;
                     const storeType = req.body.storeType;
-
+                    const myProducts = foundUser.myProducts;
                     
                     sellerID.updateMany(
                         {email: signUpEmail}, 
@@ -374,7 +388,8 @@ app.post('/dashboard', function(req, res){
                         signUpEmail: signUpEmail,
                         storeName: storeName,
                         storeType: storeType,
-                        storeDescription: storeDescription
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
                     });
                 }
             }
@@ -765,31 +780,107 @@ app.post('/products-user', function (req, res) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { Search for Products Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-app.post('/products-seller', function (req, res) {
+app.post('/products-seller', upload.array('fileInput'), function (req, res) {
     
     const signUpEmail = req.body.signUpEmail;
+    const fileInfo = req.files;
 
     sellerID.findOne({email: signUpEmail}, function(err, foundUser){
         if(err){
             console.log(err);
         }else{
             if(foundUser){
-                const signUpfName = foundUser.fname;
-                const signUplName = foundUser.lname;
-                const storeName = foundUser.store.brand;
-                const storeType = foundUser.store.type;
-                const storeDescription = foundUser.store.about;
-                const myProducts = foundUser.store.myProducts;
+                if(fileInfo){
+                    
+                    Techitem.count({}, function(err3, count){
+                        if(err3){
+                            console.log(err3);
+                        }else{
+                            if(count){
+                        
+                                const signUpfName = foundUser.fname;
+                                const signUplName = foundUser.lname;
+                                const storeName = foundUser.store.brand;
+                                const storeType = foundUser.store.type;
+                                const storeDescription = foundUser.store.about;
+                                const myProducts = foundUser.myProducts;
 
-                res.render('seller/myProducts', {
-                    signUpfName: signUpfName,
-                    signUplName: signUplName,
-                    signUpEmail: signUpEmail,
-                    storeName: storeName,
-                    storeType: storeType,
-                    storeDescription: storeDescription,
-                    myProducts: myProducts
-                });
+                                const productCategory = req.body.productCategory;
+                                const productName = req.body.productName;
+                                const productInfo = req.body.productInfo;
+                                const productPrice = req.body.productPrice;
+                                const productStock = req.body.productStock;
+                                const productTags = req.body.productTags;
+
+                                const newProduct = {
+                                    id: (count + 1), 
+                                    title: productName, 
+                                    description: productInfo, 
+                                    price: productPrice, 
+                                    stock: productStock, 
+                                    brand: storeName, 
+                                    category: productCategory, 
+                                    images: fileInfo, tags: [productTags], 
+                                    thumbnail: fileInfo[0]
+                                }
+                                
+                                const product = new Techitem(newProduct)
+
+                                product.save(function(err4){
+                                    if(err4){
+                                        console.log(err4);
+                                    }else{
+                                        console.log('product added to database successfully');
+                                    }
+                                })
+
+                                sellerID.updateOne(
+                                    {email: signUpEmail}, 
+                                    {$push: {myProducts: newProduct}},
+                                    function(err6){
+                                        if(err6){
+                                            console.log(err6);
+                                        }else{
+                                            console.log("Product uploaded to my products");
+                                            
+                                            setTimeout(function(){
+                                                res.render('seller/dashboard', {
+                                                    signUpfName: signUpfName,
+                                                    signUplName: signUplName,
+                                                    signUpEmail: signUpEmail,
+                                                    storeName: storeName,
+                                                    storeType: storeType,
+                                                    storeDescription: storeDescription,
+                                                    myProducts: myProducts
+                                                })
+                                            }, 100)
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    })
+        
+
+                }else{
+                    
+                    const signUpfName = foundUser.fname;
+                    const signUplName = foundUser.lname;
+                    const storeName = foundUser.store.brand;
+                    const storeType = foundUser.store.type;
+                    const storeDescription = foundUser.store.about;
+                    const myProducts = foundUser.myProducts;
+
+                    res.render('seller/myProducts', {
+                        signUpfName: signUpfName,
+                        signUplName: signUplName,
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
+                    });
+                }
             }
         }
     })
@@ -1284,6 +1375,19 @@ app.post('/custom-user', function (req, res) {
 
     }
 });
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/new-product', function(req, res){
+    const signUpEmail = req.body.signUpEmail;
+
+    res.render('seller/addProduct', {signUpEmail: signUpEmail});
+
+})
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
