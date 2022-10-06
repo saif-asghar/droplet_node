@@ -1,0 +1,272 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+    <style>
+
+        [x-cloak] {
+            display: none;
+        }
+
+        [type="checkbox"] {
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        .form-checkbox,
+        .form-radio {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+            display: inline-block;
+            vertical-align: middle;
+            background-origin: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            flex-shrink: 0;
+            color: currentColor;
+            background-color: #fff;
+            border-color: #e2e8f0;
+            border-width: 1px;
+            height: 1.4em;
+            width: 1.4em;
+        }
+
+        .form-checkbox {
+            border-radius: 0.25rem;
+        }
+
+        .form-radio {
+            border-radius: 50%;
+        }
+
+        .form-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+            border-color: transparent;
+            background-color: currentColor;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .form-radio:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+            border-color: transparent;
+            background-color: currentColor;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+		.required-error{
+			color: red;
+			font-size: 13px;
+			margin: 5px 15px;
+		}
+
+        .upload__box {
+        padding: 40px;
+        }
+        .upload__inputfile {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+        }
+        .upload__btn {
+        display: inline-block;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        min-width: 116px;
+        padding: 5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid;
+        background-color: #4045ba;
+        border-color: #4045ba;
+        border-radius: 10px;
+        line-height: 26px;
+        font-size: 14px;
+        }
+        .upload__btn:hover {
+        background-color: unset;
+        color: #4045ba;
+        transition: all 0.3s ease;
+        }
+        .upload__btn-box {
+        margin-bottom: 10px;
+        }
+        .upload__img-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+        }
+        .upload__img-box {
+        width: 169px;
+        padding: 0 10px;
+        margin-bottom: 12px;
+        }
+        .upload__img-close {
+            display: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            line-height: 24px;
+            z-index: 1;
+        cursor: pointer;
+        }
+        .upload__img-close:after {
+            content: '\2716';
+            font-size: 14px;
+        color: white;
+    }
+        .img-bg {
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+            padding-bottom: 100%;
+        }
+        
+        </style>
+    <title>Droplet</title>
+</head>
+
+<body class="antialiased sans-serif bg-gray-200">
+
+    <div class="max-w-3xl mx-auto px-4 py-10">
+
+        <div id="complete">
+            <div class="bg-white rounded-lg p-10 items-center shadow">
+                <div>
+                    <div class="mx-auto w-32 h-32 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset">
+                        <img id="image" class="object-cover w-full h-32 rounded-full" :src="image" />
+                    </div>
+
+                    <h2 class="text-2xl mb-4 text-gray-800 text-center font-bold">Edit Product</h2>
+
+                    <div class="text-gray-600 mb-8">
+                        
+                        <div class="mb-5">
+                            <label for="productCategoryDisable" class="font-bold mb-1 text-gray-700 block">Product Category</label>
+                            <select class="w-full px-4 py-3 rounded-lg shadow-lg focus:outline-none focus:shadow-outline text-gray-600 font-medium" placeholder="eg. Clothing" id="productCategory" name="productCategory" onkeyup="checkForEmpty(this)" required>
+                                <option>...</option>
+                                <option value="smartphones">smartphones</option>
+                                <option value="laptops">laptops</option>
+                                <option value="fragrances">fragrances</option>
+                                <option value="skincare">skincare</option>
+                                <option value="groceries">groceries</option>
+                                <option value="home-decoration">home-decoration</option>
+                                <option value="furniture">furniture</option>
+                                <option value="tops">tops</option>
+                                <option value="womens-dresses">womens-dresses</option>
+                                <option value="womens-shoes">womens-shoes</option>
+                                <option value="mens-shirts">mens-shirts</option>
+                                <option value="mens-shoes">mens-shoes</option>
+                                <option value="mens-watches">mens-watches</option>
+                                <option value="womens-watches">womens-watches</option>
+                                <option value="womens-bags">womens-bags</option>
+                                <option value="womens-jewellery">womens-jewellery</option>
+                                <option value="automotive">automotive</option>
+                                <option value="sunglasses">sunglasses</option>
+                                <option value="motorcycle">motorcycle</option>
+                                <option value="lighting">lighting</option>
+                            </select>
+                            <input type="hidden" id="categoryOfProduct" value="<%= productToEdit.category %>">
+                        </div>
+
+                        <div class="mb-5">
+                            <label for="productNameDisable" class="font-bold mb-1 text-gray-700 block">Product Name</label>
+                            <input type="text"
+                                class="w-full px-4 py-3 rounded-lg shadow-lg focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productNameDisable"
+                                name="productNameDisable"
+                                value="<%= productToEdit.title %>">
+                        </div>
+            
+                        <div class="mb-5">
+                            <label for="productInfoDisable" class="font-bold mb-1 text-gray-700 block">Description</label>
+                            <input type="text"
+                                class="w-full px-4 py-3 rounded-lg shadow-lg focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productInfoDisable"
+                                name="productInfoDisable"
+                                value="<%= productToEdit.description %>">
+                        </div>
+            
+                        <div class="mb-5">
+                            <label for="productPriceDisable" class="font-bold mb-1 text-gray-700 block">Price</label>
+                            <input type="number"
+                                class="w-full px-4 py-3 rounded-lg shadow-lg focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productPriceDisable"
+                                name="productPriceDisable"
+                                value="<%= productToEdit.price %>">
+                        </div>
+            
+                        <div class="mb-5">
+                            <label for="productStockDisable" class="font-bold mb-1 text-gray-700 block">Stock</label>
+                            <input type="number"
+                                class="w-full px-4 py-3 rounded-lg shadow-lg focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productStockDisable"
+                                name="productStockDisable"
+                                value="<%= productToEdit.stock %>">
+                        </div>
+                    
+                        <div class="mb-5">
+                            <label for="productTagsDisable" class="font-bold mb-1 text-gray-700 block">Tags</label>
+                            <textarea rows="6" type="text"
+                                class="w-full px-4 py-3 rounded-lg shadow-lg focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                id="productTagsDisable"
+                                name="productTagsDisable"
+                                ><%= productToEdit.tags %></textarea>
+                        </div>
+
+                    </div>
+                    
+                    <div class="flex">
+                        <button class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+                        type="submit"
+                        name="confirm"
+                        value="no"
+                        >Edit</button>
+                        
+                        <button class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+                        type="submit"
+                        name="confirm"
+                        value="yes"
+                        >Confirm</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const productCategory = document.getElementById('productCategory');
+        const categoryOfProduct = document.getElementById('categoryOfProduct');
+
+        for(i = 0; i < productCategory.length; i++){
+            if(productCategory[i].value === categoryOfProduct.value){
+                productCategory[i].setAttribute('selected', true);
+            }
+        }
+    </script>
+</body>
+</html>

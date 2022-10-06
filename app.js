@@ -335,7 +335,6 @@ app.post('/signup-seller', function (req, res) {
 app.post('/dashboard', function(req, res){
 
     const signUpEmail = req.body.signUpEmail;
-    console.log(signUpEmail);
     
     sellerID.findOne({email: signUpEmail}, function(err, foundUser){
         if(err){
@@ -419,16 +418,24 @@ app.post('/login-seller', function (req, res) {
         } else {
             if (foundUser) {
                 if (foundUser.password === loginPass) {
-
+                    
                     const signUpfName = foundUser.fname;
                     const signUplName = foundUser.lname;
+                    const storeName = foundUser.store.brand;
+                    const storeType = foundUser.store.type;
+                    const storeDescription = foundUser.store.about;
+                    const myProducts = foundUser.myProducts;
                     const signUpEmail = loginEmail;
-
+                    
                     res.render('seller/dashboard', {
                         signUpfName: signUpfName,
                         signUplName: signUplName,
-                        signUpEmail: signUpEmail
-                    })
+                        signUpEmail: signUpEmail,
+                        storeName: storeName,
+                        storeType: storeType,
+                        storeDescription: storeDescription,
+                        myProducts: myProducts
+                    });
 
                 }else {
                     console.log('incorrect pass');
@@ -1387,6 +1394,72 @@ app.post('/new-product', function(req, res){
 
     res.render('seller/addProduct', {signUpEmail: signUpEmail});
 
+})
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/delete', function(req, res){
+    const signUpEmail = req.body.userEmail;
+    const productID = Number(req.body.productID);
+
+    sellerID.updateOne(
+        { email: signUpEmail },
+        { $pull: { myProducts: {id: productID} } },
+        function(err){
+            if(err){
+                console.log(err);
+            }else{
+                console.log('deleted form seller my products');
+            }
+        }
+    )
+    Techitem.deleteOne({id: productID}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('deleted from products database');
+        }
+    })
+
+})
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/edit-product', function(req, res){
+    
+    const sellerEmail = req.body.sellerEmail;
+    const productID = req.body.productID;
+
+    sellerID.findOne({email: sellerEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                let indexOfProduct = 0;
+
+                foundUser.myProducts.forEach(function(product, index){                    
+                    if(product.id == productID){
+                        indexOfProduct = index;
+                    }
+                })
+
+                let productToEdit = foundUser.myProducts[indexOfProduct];
+                
+                res.render('seller/editProduct', {
+                    productToEdit: productToEdit,
+                    signUpEmail: sellerEmail
+                });
+            }
+        }
+    })
 })
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

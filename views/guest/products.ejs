@@ -155,8 +155,13 @@
                                     <div class="product_card">
                                         <div class="card border-0">
                                             <div class="card-header bg-transparent border-0 p-0">
-                                                <img class="card-img-top" style="border-radius: 5px; max-height: 306px;"
+                                                <%if(product[1].thumbnail.filename){%>
+                                                    <img class="card-img-top" style="border-radius: 5px; max-height: 306px;" src="pics/<%= product[1].thumbnail.filename %>" alt="">
+                                                <%}else{%>
+                                                    <img class="card-img-top" style="border-radius: 5px; max-height: 306px;"
                                                     src="<%= product[1].thumbnail %>" alt="">
+                                                <%}%>
+                                                    <input type="hidden" value="">
                                                 <div class="card-overlay">
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <button type="button" class="btn btn-secondary"><i
@@ -165,9 +170,6 @@
                                                                 class="fa fa-shopping-cart"></i> Add to cart</button>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="details-btn">
-                                    <a href="#" class="btn btn-dark">View Details</a>
-                                </div> -->
                                             </div>
                                             <div class="card-body">
                                                 <small>
@@ -192,8 +194,7 @@
                                                         </div>
                                                     </form>
                                                 </strong>
-                                                <div class="price">
-                                                    <!-- <span class="text-decoration-line-through">৳ 870</span> -->
+                                                <div class="price">                                                    
                                                     <span class="text-warning">
                                                         <i class="fa fa-star"></i>
                                                         <i class="fa fa-star"></i>
