@@ -1432,6 +1432,41 @@ app.post('/delete', function(req, res){
 
 
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/edit-product', function(req, res){
+    
+    const sellerEmail = req.body.sellerEmail;
+    const productID = req.body.productID;
+
+    sellerID.findOne({email: sellerEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                let indexOfProduct = 0;
+
+                foundUser.myProducts.forEach(function(product, index){                    
+                    if(product.id == productID){
+                        indexOfProduct = index;
+                    }
+                })
+
+                let productToEdit = foundUser.myProducts[indexOfProduct];
+                
+                res.render('seller/editProduct', {
+                    productToEdit: productToEdit,
+                    signUpEmail: sellerEmail
+                });
+            }
+        }
+    })
+})
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 { APP.GET Home page START }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

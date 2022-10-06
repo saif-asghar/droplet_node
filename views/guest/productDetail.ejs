@@ -73,12 +73,18 @@
     <div class="container mt-5">
         <div class="wrapper">
             <div class="product-top">
+
                 <div class="product__gallery">
-                    <%for(i=0; i < foundInfo[0].images.length; i++){%>
-                        <img class="custom-pictures mb-2" style="border-radius: 5px;"
+                    <%for(i = 0; i < foundInfo[0].images.length; i++){%>
+                        <%if(foundInfo[0].images[i].filename){%>
+                            <img class="custom-pictures mb-2" style="border-radius: 5px;" src="pics/<%= foundInfo[0].images[i].filename %>" alt="">
+                        <%}else{%>
+                            <img class="custom-pictures mb-2" style="border-radius: 5px;"
                             src="<%= foundInfo[0].images[i] %>" alt="">
                         <%}%>
+                    <%}%>
                 </div>
+
                 <div class="product__info">
                     <div class="product__desc">
                         <div class="product__type">

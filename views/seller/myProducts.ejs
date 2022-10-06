@@ -112,8 +112,11 @@
                               <%=product[1].stock%>                        
                               <div class="d-inline-block float-right">
                                 <button onclick="deleteProduct(this)" class="btn"><i class="fa fa-trash text-danger mr-1" style="cursor: pointer;"></i></button>
-                                <button class="btn btn-outline-primary" style="padding: 0 15px;">Edit</i></button>
-                                <input type="hidden" id="productID" value="<%= product[1].id %>">
+                                <form class="d-inline-block" action="/edit-product" method="post">
+                                  <button type="submit" class="btn btn-outline-primary" style="padding: 0 15px;">Edit</i></button>
+                                  <input type="hidden" name="sellerEmail" value="<%= signUpEmail %>">
+                                  <input type="hidden" id="productID" name="productID" value="<%= product[1].id %>">
+                                </form>                                
                               </div>
                             </td>
                           </tr>

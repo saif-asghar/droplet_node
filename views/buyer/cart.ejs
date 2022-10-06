@@ -130,7 +130,11 @@
 
                     <div class="tr_item">
                       <div class="td_item item_img">
-                        <img src="<%= result[i]._doc.thumbnail %>">
+                        <%if(result[i]._doc.thumbnail.filename){%>
+                          <img src="pics/<%= result[i]._doc.thumbnail.filename %>" alt="">
+                        <%}else{%>
+                          <img src="<%= result[i]._doc.thumbnail %>" alt="">
+                        <%}%>
                       </div>
                       <div class="td_item item_name">
                         <label class="main"><%= result[i]._doc.title %></label>
