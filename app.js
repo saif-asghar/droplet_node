@@ -827,31 +827,49 @@ app.post('/products-seller', upload.array('fileInput'), function (req, res) {
                                     stock: productStock, 
                                     brand: storeName, 
                                     category: productCategory, 
-                                    images: fileInfo, tags: [productTags], 
+                                    images: fileInfo, 
+                                    tags: [productTags], 
                                     thumbnail: fileInfo[0]
                                 }
                                 
-                                const product = new Techitem(newProduct)
+                                const newMyProducts = JSON.stringify(myProducts);
 
-                                product.save(function(err4){
-                                    if(err4){
-                                        console.log(err4);
-                                    }else{
-                                        console.log('product added to database successfully');
-                                    }
-                                })
+                                if(newMyProducts.includes(productName) && newMyProducts.includes(productInfo) && newMyProducts.includes(productPrice) && newMyProducts.includes(productStock) && newMyProducts.includes(productCategory)){
 
-                                sellerID.updateOne(
-                                    {email: signUpEmail}, 
-                                    {$push: {myProducts: newProduct}},
-                                    function(err6){
-                                        if(err6){
-                                            console.log(err6);
+                                    console.log('yes repeating product');
+                                    
+                                    res.render('seller/myProducts', {
+                                        signUpfName: signUpfName,
+                                        signUplName: signUplName,
+                                        signUpEmail: signUpEmail,
+                                        storeName: storeName,
+                                        storeType: storeType,
+                                        storeDescription: storeDescription,
+                                        myProducts: myProducts
+                                    })
+
+                                }else{
+
+                                    const product = new Techitem(newProduct)
+
+                                    product.save(function(err4){
+                                        if(err4){
+                                            console.log(err4);
                                         }else{
-                                            console.log("Product uploaded to my products");
-                                            
-                                            setTimeout(function(){
-                                                res.render('seller/dashboard', {
+                                            console.log('product added to database successfully');
+                                        }
+                                    })
+
+                                    sellerID.updateOne(
+                                        {email: signUpEmail}, 
+                                        {$push: {myProducts: newProduct}},
+                                        function(err6){
+                                            if(err6){
+                                                console.log(err6);
+                                            }else{
+                                                console.log("Product uploaded to my products");
+
+                                                res.render('seller/myProducts', {
                                                     signUpfName: signUpfName,
                                                     signUplName: signUplName,
                                                     signUpEmail: signUpEmail,
@@ -859,11 +877,11 @@ app.post('/products-seller', upload.array('fileInput'), function (req, res) {
                                                     storeType: storeType,
                                                     storeDescription: storeDescription,
                                                     myProducts: myProducts
-                                                })
-                                            }, 100)
+                                                })                                                                
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
                     })

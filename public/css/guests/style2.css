@@ -137,6 +137,7 @@ body.nav-open {
 }
 .product__gallery {
   flex-shrink: 0;
+  max-width: 49%;
 }
 .product__sizes {
   margin-bottom: 2rem;
@@ -294,3 +295,4 @@ body.nav-open {
 .product__rating i{
   color: orange !important;
 }
+
