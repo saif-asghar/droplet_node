@@ -74,32 +74,6 @@
               
             <!-- main content -->
             <main class="container-fluid">
-              <!-- <section class="row">
-                <div class="col-md-6 col-lg-4">
-                  <article class="p-4 rounded shadow-sm border-left mb-4">
-                    <a href="#" class="d-flex align-items-center">
-                      <span class="fa fa-box h5"></span>
-                      <h5 class="ml-2">Products</h5>
-                    </a>
-                  </article>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                  <article class="p-4 rounded shadow-sm border-left mb-4">
-                    <a href="#" class="d-flex align-items-center">
-                      <span class="fa fa-person h5"></span>
-                      <h5 class="ml-2">Customers</h5>
-                    </a>
-                  </article>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                  <article class="p-4 rounded shadow-sm border-left mb-4">
-                    <a href="#" class="d-flex align-items-center">
-                      <span class="fa fa-person-check h5"></span>
-                      <h5 class="ml-2">Orders</h5>
-                    </a>
-                  </article>
-                </div>
-              </section> -->
 
               <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
                 <div class="container">
@@ -110,20 +84,21 @@
 
               <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
                 <div class="container">
-                  <p class="lead text-muted">Products: <%=myProducts.length%></p>
-                </div>
-              </div>
-
-              <!-- <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
-                <div class="container">
                   <div>
+                    
+                    <div style="display: none;">
+                      <%myProducts.forEach(function(product){%>
+                        <p style="display: none;" class="productCategoriesForDoughnut"><%= product.category %></p>
+                      <%})%>
+                    </div>
+
                     <div class="card-doughnut">
-                      <header style="text-align: center">Sales</header>
+                      <header style="text-align: center">Categories</header>
                       <div class="container-doughnut">
                         <canvas width="330" height="500" id="myChart"></canvas>
                       </div>
                     </div>
-                    <div class="card-doughnut">
+                    <!-- <div class="card-doughnut">
                       <header style="text-align: center">Ratings</header>
                       <div class="container-doughnut">
                         <canvas width="330" height="500" id="myChart2"></canvas>
@@ -134,17 +109,18 @@
                       <div class="container-doughnut">
                         <canvas width="330" height="500" id="myChart3"></canvas>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
-              </div> -->
+              </div>
             </main>
           </div>
         </div>
       </div>
 
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-      <!-- <script src="js/seller/doughnut.js"></script> -->
+      <script src="js/seller/doughnut.js"></script>
       <script src="js/seller/dash.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
