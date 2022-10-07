@@ -66,7 +66,10 @@
                   </button>
                   <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="logout-dropdown">
                     <button onclick="logOut()" class="dropdown-item" href="#">Logout</button>
-                    <a class="dropdown-item" href="#">Settings</a>
+                    <form action="/seller-settings" method="post">
+                      <input type="hidden" name="signUpEmail2" value="<%= signUpEmail %>">
+                      <button type="submit" class="dropdown-item">Settings</button>
+                    </form>
                   </div>
                 </div>
               </nav>
