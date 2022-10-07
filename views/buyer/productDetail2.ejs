@@ -340,11 +340,12 @@
                                 
                             <%}%>
 
-                <form action="/products-<%= (foundInfoAll[i].title).toLowerCase() %>" method="post">
+                <form action="/product-user-<%= (foundInfoAll[i].title).toLowerCase() %>" method="post">
                     <div style="display: none;">
                         <input type="text" name="productID" value="<%= foundInfoAll[i]._id %>">
                         <input type="text" name="productCategory" value="<%= foundInfoAll[i].category %>">
                         <input type="text" name="productTitleForParam" value="<%= (foundInfoAll[i].title).toLowerCase() %>">
+                        <input type="text" name="userEmail4" value="<%= signUpEmail %>">
                     </div>
                         </div>
                         <button type="submit" class="card-btn">View Details</button>

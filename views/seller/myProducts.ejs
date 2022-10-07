@@ -105,7 +105,11 @@
                             <th scope="row"><%=Number(product[0]) + 1%></th>
                             <td>
                               <img width="30" height="30" style="border-radius: 5px;" src="pics/<%=product[1].thumbnail.filename%>" alt="">
-                              <%=product[1].title%>
+                              <%if((product[1].title.length) >= 60){%>
+                                <%=(product[1].title).slice(0, 60) + '...'%>
+                              <%}else{%>
+                                <%=product[1].title%>
+                              <%}%>
                             </td>
                             <td>$<%=product[1].price%></td>
                             <td>
