@@ -137,7 +137,13 @@
                         <%}%>
                       </div>
                       <div class="td_item item_name">
-                        <label class="main"><%= result[i]._doc.title %></label>
+                        <label class="main">
+                          <%if(result[i]._doc.title.length >= 20){%>
+                            <%= (result[i]._doc.title).slice(0, 20) + '...' %>
+                          <%}else{%>
+                            <%= result[i]._doc.title %>
+                          <%}%>
+                        </label>
                         <label class="sub">Ref. <%= result[i]._doc.id %></label>
                       </div>
                       <div class="td_item item_color">
@@ -147,7 +153,7 @@
 
                         <div class="qty-container">
                           <button class="qty-btn-minus btn-danger btn-cornered mr-1" type="button"><i class="fa fa-minus"></i></button>
-                        <input type="text" name="qty" value="1" class="input-qty input-cornered">
+                        <input type="text" name="qty" disabled value="1" class="input-qty input-cornered">
                           <button class="qty-btn-plus btn-danger btn-cornered ml-1" type="button"><i class="fa fa-plus"></i></button>
                         </div>
 

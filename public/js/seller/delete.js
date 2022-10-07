@@ -1,7 +1,8 @@
 function deleteProduct(e){
     const answer = prompt('are you sure you want to delete this product (y/n)');
     const userEmail = document.getElementById('signUpEmail').value;
-    const productID = document.getElementById('productID').value;
+    const productID = e.nextElementSibling.lastElementChild.value;
+    console.log(productID);
 
     if(answer === 'y'){
         $.ajax({

@@ -341,55 +341,103 @@ app.post('/dashboard', function(req, res){
             console.log(err);
         }else{
             if(foundUser){
-                if(foundUser.store['brand']){
 
-                    const signUpfName = foundUser.fname;
-                    const signUplName = foundUser.lname;
-                    const storeName = foundUser.store.brand;
-                    const storeType = foundUser.store.type;
-                    const storeDescription = foundUser.store.about;
-                    const myProducts = foundUser.myProducts;
+                if(req.body.userfNameEdit){
 
-                    res.render('seller/dashboard', {
-                        signUpfName: signUpfName,
-                        signUplName: signUplName,
-                        signUpEmail: signUpEmail,
-                        storeName: storeName,
-                        storeType: storeType,
-                        storeDescription: storeDescription,
-                        myProducts: myProducts
-                    });
-
-                }else{
-                    
-                    const signUpfName = req.body.signUpfName;
-                    const signUplName = req.body.signUplName;
-                    const storeName = req.body.storeName;
-                    const storeDescription = req.body.storeDescription;
-                    const storeType = req.body.storeType;
-                    const myProducts = foundUser.myProducts;
+                    const userfNameEdit = req.body.userfNameEdit;
+                    const userlNameEdit = req.body.userlNameEdit;
+                    const storeNameEdit = req.body.storeNameEdit;
+                    const storeInfoEdit = req.body.storeInfoEdit;
+                    const storeTypeEdit = req.body.storeTypeEdit;
+                    const userEmailEdit = req.body.userEmailEdit;
                     
                     sellerID.updateMany(
                         {email: signUpEmail}, 
-                        {store: {brand: storeName, type: storeType, about: storeDescription}},
-                        function(err){
+                        {
+                            fname: userfNameEdit,
+                            lname: userlNameEdit,
+                            email: userEmailEdit,
+                            'store.brand': storeNameEdit,
+                            'store.about': storeInfoEdit,
+                            'store.type': storeTypeEdit
+                        }, 
+                        function(err) {
                             if(err){
                                 console.log(err);
                             }else{
-                                console.log('all added to database');
+                                console.log('store info updated successully');
+
+                                const signUpfName = foundUser.fname;
+                                const signUplName = foundUser.lname;
+                                const storeName = foundUser.store.brand;
+                                const storeType = foundUser.store.type;
+                                const storeDescription = foundUser.store.about;
+                                const myProducts = foundUser.myProducts;   
+
+                                res.render('seller/dashboard', {
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail,
+                                    storeName: storeName,
+                                    storeType: storeType,
+                                    storeDescription: storeDescription,
+                                    myProducts: myProducts
+                                })
                             }
                         }
-                    ) 
-                                           
-                    res.render('seller/dashboard', {
-                        signUpfName: signUpfName,
-                        signUplName: signUplName,
-                        signUpEmail: signUpEmail,
-                        storeName: storeName,
-                        storeType: storeType,
-                        storeDescription: storeDescription,
-                        myProducts: myProducts
-                    });
+                    )
+
+                }else{
+                    if(foundUser.store['brand']){
+
+                        const signUpfName = foundUser.fname;
+                        const signUplName = foundUser.lname;
+                        const storeName = foundUser.store.brand;
+                        const storeType = foundUser.store.type;
+                        const storeDescription = foundUser.store.about;
+                        const myProducts = foundUser.myProducts;
+
+                        res.render('seller/dashboard', {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            storeName: storeName,
+                            storeType: storeType,
+                            storeDescription: storeDescription,
+                            myProducts: myProducts
+                        });
+
+                    }else{
+                        
+                        const signUpfName = req.body.signUpfName;
+                        const signUplName = req.body.signUplName;
+                        const storeName = req.body.storeName;
+                        const storeDescription = req.body.storeDescription;
+                        const storeType = req.body.storeType;
+                        const myProducts = foundUser.myProducts;
+                        
+                        sellerID.updateMany(
+                            {email: signUpEmail}, 
+                            {store: {brand: storeName, type: storeType, about: storeDescription}},
+                            function(err){
+                                if(err){
+                                    console.log(err);
+                                }else{
+                                    console.log('all added to database');
+                                }
+                            }
+                        ) 
+                                            
+                        res.render('seller/dashboard', {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            storeName: storeName,
+                            storeType: storeType,
+                            storeDescription: storeDescription,
+                            myProducts: myProducts
+                        });
+                    }
                 }
             }
         }
@@ -790,103 +838,174 @@ app.post('/products-user', function (req, res) {
 app.post('/products-seller', upload.array('fileInput'), function (req, res) {
     
     const signUpEmail = req.body.signUpEmail;
-    const fileInfo = req.files;
+    console.log(signUpEmail);
 
     sellerID.findOne({email: signUpEmail}, function(err, foundUser){
         if(err){
             console.log(err);
         }else{
             if(foundUser){
-                if(fileInfo){
+
+                if(req.body.productCategoryEdit){
                     
-                    Techitem.count({}, function(err3, count){
-                        if(err3){
-                            console.log(err3);
-                        }else{
-                            if(count){
-                        
+                    const productCategoryEdit = req.body.productCategoryEdit;
+                    const productNameEdit = req.body.productNameEdit;
+                    const productInfoEdit = req.body.productInfoEdit;
+                    const productPriceEdit = req.body.productPriceEdit;
+                    const productStockEdit = req.body.productStockEdit;
+                    const productTagsEdit = req.body.productTagsEdit;
+                    const productID = req.body.productID;
+
+                    sellerID.updateMany(
+                        {'myProducts.id': productID}, 
+                        {'$set': {
+                            'myProducts.$.category': productCategoryEdit,
+                            'myProducts.$.title': productNameEdit,
+                            'items.$.description': productInfoEdit,
+                            'items.$.price': productPriceEdit,
+                            'items.$.stock': productStockEdit,
+                            'items.$.tags': productTagsEdit,
+                        }}, 
+                        function(err) {
+                            if(err){
+                                console.log(err);
+                            }else{
+                                console.log('product updated successully');
+
                                 const signUpfName = foundUser.fname;
                                 const signUplName = foundUser.lname;
                                 const storeName = foundUser.store.brand;
                                 const storeType = foundUser.store.type;
                                 const storeDescription = foundUser.store.about;
-                                const myProducts = foundUser.myProducts;
+                                const myProducts = foundUser.myProducts;   
 
-                                const productCategory = req.body.productCategory;
-                                const productName = req.body.productName;
-                                const productInfo = req.body.productInfo;
-                                const productPrice = req.body.productPrice;
-                                const productStock = req.body.productStock;
-                                const productTags = req.body.productTags;
-
-                                const newProduct = {
-                                    id: (count + 1), 
-                                    title: productName, 
-                                    description: productInfo, 
-                                    price: productPrice, 
-                                    stock: productStock, 
-                                    brand: storeName, 
-                                    category: productCategory, 
-                                    images: fileInfo, tags: [productTags], 
-                                    thumbnail: fileInfo[0]
-                                }
-                                
-                                const product = new Techitem(newProduct)
-
-                                product.save(function(err4){
-                                    if(err4){
-                                        console.log(err4);
-                                    }else{
-                                        console.log('product added to database successfully');
-                                    }
+                                res.render('seller/myProducts', {
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail,
+                                    storeName: storeName,
+                                    storeType: storeType,
+                                    storeDescription: storeDescription,
+                                    myProducts: myProducts
                                 })
-
-                                sellerID.updateOne(
-                                    {email: signUpEmail}, 
-                                    {$push: {myProducts: newProduct}},
-                                    function(err6){
-                                        if(err6){
-                                            console.log(err6);
-                                        }else{
-                                            console.log("Product uploaded to my products");
-                                            
-                                            setTimeout(function(){
-                                                res.render('seller/dashboard', {
-                                                    signUpfName: signUpfName,
-                                                    signUplName: signUplName,
-                                                    signUpEmail: signUpEmail,
-                                                    storeName: storeName,
-                                                    storeType: storeType,
-                                                    storeDescription: storeDescription,
-                                                    myProducts: myProducts
-                                                })
-                                            }, 100)
-                                        }
-                                    }
-                                )
                             }
                         }
-                    })
-        
+                    )
 
                 }else{
-                    
-                    const signUpfName = foundUser.fname;
-                    const signUplName = foundUser.lname;
-                    const storeName = foundUser.store.brand;
-                    const storeType = foundUser.store.type;
-                    const storeDescription = foundUser.store.about;
-                    const myProducts = foundUser.myProducts;
+                    if(req.files){
 
-                    res.render('seller/myProducts', {
-                        signUpfName: signUpfName,
-                        signUplName: signUplName,
-                        signUpEmail: signUpEmail,
-                        storeName: storeName,
-                        storeType: storeType,
-                        storeDescription: storeDescription,
-                        myProducts: myProducts
-                    });
+                        console.log('this condition');
+
+                        Techitem.count({}, function(err3, count){
+                            if(err3){
+                                console.log(err3);
+                            }else{
+                                if(count){
+                            
+                                    const fileInfo = req.files;
+                                    const signUpfName = foundUser.fname;
+                                    const signUplName = foundUser.lname;
+                                    const storeName = foundUser.store.brand;
+                                    const storeType = foundUser.store.type;
+                                    const storeDescription = foundUser.store.about;
+                                    const myProducts = foundUser.myProducts;
+
+                                    const productCategory = req.body.productCategory;
+                                    const productName = req.body.productName;
+                                    const productInfo = req.body.productInfo;
+                                    const productPrice = req.body.productPrice;
+                                    const productStock = req.body.productStock;
+                                    const productTags = req.body.productTags;
+
+                                    const newProduct = {
+                                        id: (count + 1), 
+                                        title: productName, 
+                                        description: productInfo, 
+                                        price: productPrice, 
+                                        stock: productStock, 
+                                        brand: storeName, 
+                                        category: productCategory, 
+                                        images: fileInfo, 
+                                        tags: [productTags], 
+                                        thumbnail: fileInfo[0]
+                                    }
+                                    
+                                    const newMyProducts = JSON.stringify(myProducts);
+
+                                    if(newMyProducts.includes(productName) && newMyProducts.includes(productInfo) && newMyProducts.includes(productPrice) && newMyProducts.includes(productStock) && newMyProducts.includes(productCategory)){
+
+                                        console.log('yes repeating product');
+                                        
+                                        res.render('seller/myProducts', {
+                                            signUpfName: signUpfName,
+                                            signUplName: signUplName,
+                                            signUpEmail: signUpEmail,
+                                            storeName: storeName,
+                                            storeType: storeType,
+                                            storeDescription: storeDescription,
+                                            myProducts: myProducts
+                                        })
+
+                                    }else{
+
+                                        const product = new Techitem(newProduct)
+
+                                        product.save(function(err4){
+                                            if(err4){
+                                                console.log(err4);
+                                            }else{
+                                                console.log('product added to database successfully');
+                                            }
+                                        })
+
+                                        sellerID.updateOne(
+                                            {email: signUpEmail}, 
+                                            {$push: {myProducts: newProduct}},
+                                            function(err6){
+                                                if(err6){
+                                                    console.log(err6);
+                                                }else{
+                                                    console.log("Product uploaded to my products");
+
+                                                    res.render('seller/myProducts', {
+                                                        signUpfName: signUpfName,
+                                                        signUplName: signUplName,
+                                                        signUpEmail: signUpEmail,
+                                                        storeName: storeName,
+                                                        storeType: storeType,
+                                                        storeDescription: storeDescription,
+                                                        myProducts: myProducts
+                                                    })                                                                
+                                                }
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        })
+            
+
+                    }else{
+                 
+                        console.log('this 2')
+                        const signUpfName = foundUser.fname;
+                        const signUplName = foundUser.lname;
+                        const storeName = foundUser.store.brand;
+                        const storeType = foundUser.store.type;
+                        const storeDescription = foundUser.store.about;
+                        const myProducts = foundUser.myProducts;
+
+                        res.render('seller/myProducts', {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            storeName: storeName,
+                            storeType: storeType,
+                            storeDescription: storeDescription,
+                            myProducts: myProducts
+                        });
+                    }
                 }
             }
         }
@@ -1460,6 +1579,41 @@ app.post('/edit-product', function(req, res){
             }
         }
     })
+})
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/seller-settings', function(req, res){
+
+    const signUpEmail = req.body.signUpEmail2; 
+
+    sellerID.findOne({email: signUpEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                // console.log(foundUser);
+                const userfName = foundUser.fname;
+                const userlName = foundUser.lname;
+                const storeName = foundUser.store.brand;
+                const storeInfo = foundUser.store.about;
+                const storeType = foundUser.store.type;
+                res.render('seller/settings', {
+                    userfName: userfName,
+                    userlName: userlName,
+                    storeName: storeName,
+                    storeInfo: storeInfo,
+                    storeType: storeType,
+                    signUpEmail: signUpEmail
+                });
+            }
+        }
+    })
+
 })
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

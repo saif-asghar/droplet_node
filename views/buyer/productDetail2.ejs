@@ -251,7 +251,11 @@
                     <!-- Replacable cards -->
                     <div class="card-related">
                         <div class="card-img-related">
-                            <img class="card-img-related2" src="<%= foundInfoAll[i].thumbnail %>" alt="">
+                            <%if(foundInfoAll[i].thumbnail.filename){%>
+                                <img class="card-img-related2" src="pics/<%= foundInfoAll[i].thumbnail.filename %>" alt="">
+                            <%}else{%>
+                                <img class="card-img-related2" src="<%= foundInfoAll[i].thumbnail %>" alt="">
+                            <%}%>                        
                         </div>
                     <div class="card-title-related">
                         <h3><%= (foundInfoAll[i].title).slice(0, 13) + '...' %></h3>
@@ -336,11 +340,12 @@
                                 
                             <%}%>
 
-                <form action="/products-<%= (foundInfoAll[i].title).toLowerCase() %>" method="post">
+                <form action="/product-user-<%= (foundInfoAll[i].title).toLowerCase() %>" method="post">
                     <div style="display: none;">
                         <input type="text" name="productID" value="<%= foundInfoAll[i]._id %>">
                         <input type="text" name="productCategory" value="<%= foundInfoAll[i].category %>">
                         <input type="text" name="productTitleForParam" value="<%= (foundInfoAll[i].title).toLowerCase() %>">
+                        <input type="text" name="userEmail4" value="<%= signUpEmail %>">
                     </div>
                         </div>
                         <button type="submit" class="card-btn">View Details</button>
