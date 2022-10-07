@@ -65,9 +65,12 @@
                     <span class="fa fa-user text-primary h4 text-secondary user-icon"></span>
                     <span class="fa fa-chevron-down ml-1 mb-2 small user-icon2"></span>
                   </button>
-                  <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="logout-dropdown">
-                    <a class="dropdown-item" href="#">Logout</a>
-                    <a class="dropdown-item" href="#">Settings</a>
+                  <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="logout-dropdown">                    
+                    <button onclick="logOut()" class="dropdown-item">Logout</button>
+                    <form action="/seller-settings" method="post">
+                      <input type="hidden" name="signUpEmail2" value="<%= signUpEmail %>">
+                      <button type="submit" class="dropdown-item">Settings</button>
+                    </form>
                   </div>
                 </div>
               </nav>
@@ -123,5 +126,16 @@
       <script src="js/seller/doughnut.js"></script>
       <script src="js/seller/dash.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script>
+        function logOut(){
+          window.location = '/login';
+        }
+        window.onload = function() {
+          if(!window.location.hash) {
+              window.location = window.location + '#loaded';
+              window.location.reload();
+          }
+        }
+      </script>
 </body>
 </html>

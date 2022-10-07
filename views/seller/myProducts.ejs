@@ -65,7 +65,7 @@
                     <span class="fa fa-chevron-down ml-1 mb-2 small user-icon2"></span>
                   </button>
                   <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="logout-dropdown">
-                    <a class="dropdown-item" href="#">Logout</a>
+                    <button onclick="logOut()" class="dropdown-item" href="#">Logout</button>
                     <a class="dropdown-item" href="#">Settings</a>
                   </div>
                 </div>
@@ -145,6 +145,10 @@
               window.location = window.location + '#loaded';
               window.location.reload();
           }
+        }
+      
+        function logOut(){
+          window.location = '/login';
         }
       </script>
       

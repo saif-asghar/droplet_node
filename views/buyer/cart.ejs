@@ -137,7 +137,13 @@
                         <%}%>
                       </div>
                       <div class="td_item item_name">
-                        <label class="main"><%= result[i]._doc.title %></label>
+                        <label class="main">
+                          <%if(result[i]._doc.title.length >= 20){%>
+                            <%= (result[i]._doc.title).slice(0, 20) + '...' %>
+                          <%}else{%>
+                            <%= result[i]._doc.title %>
+                          <%}%>
+                        </label>
                         <label class="sub">Ref. <%= result[i]._doc.id %></label>
                       </div>
                       <div class="td_item item_color">

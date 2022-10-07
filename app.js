@@ -341,55 +341,103 @@ app.post('/dashboard', function(req, res){
             console.log(err);
         }else{
             if(foundUser){
-                if(foundUser.store['brand']){
 
-                    const signUpfName = foundUser.fname;
-                    const signUplName = foundUser.lname;
-                    const storeName = foundUser.store.brand;
-                    const storeType = foundUser.store.type;
-                    const storeDescription = foundUser.store.about;
-                    const myProducts = foundUser.myProducts;
+                if(req.body.userfNameEdit){
 
-                    res.render('seller/dashboard', {
-                        signUpfName: signUpfName,
-                        signUplName: signUplName,
-                        signUpEmail: signUpEmail,
-                        storeName: storeName,
-                        storeType: storeType,
-                        storeDescription: storeDescription,
-                        myProducts: myProducts
-                    });
-
-                }else{
-                    
-                    const signUpfName = req.body.signUpfName;
-                    const signUplName = req.body.signUplName;
-                    const storeName = req.body.storeName;
-                    const storeDescription = req.body.storeDescription;
-                    const storeType = req.body.storeType;
-                    const myProducts = foundUser.myProducts;
+                    const userfNameEdit = req.body.userfNameEdit;
+                    const userlNameEdit = req.body.userlNameEdit;
+                    const storeNameEdit = req.body.storeNameEdit;
+                    const storeInfoEdit = req.body.storeInfoEdit;
+                    const storeTypeEdit = req.body.storeTypeEdit;
+                    const userEmailEdit = req.body.userEmailEdit;
                     
                     sellerID.updateMany(
                         {email: signUpEmail}, 
-                        {store: {brand: storeName, type: storeType, about: storeDescription}},
-                        function(err){
+                        {
+                            fname: userfNameEdit,
+                            lname: userlNameEdit,
+                            email: userEmailEdit,
+                            'store.brand': storeNameEdit,
+                            'store.about': storeInfoEdit,
+                            'store.type': storeTypeEdit
+                        }, 
+                        function(err) {
                             if(err){
                                 console.log(err);
                             }else{
-                                console.log('all added to database');
+                                console.log('store info updated successully');
+
+                                const signUpfName = foundUser.fname;
+                                const signUplName = foundUser.lname;
+                                const storeName = foundUser.store.brand;
+                                const storeType = foundUser.store.type;
+                                const storeDescription = foundUser.store.about;
+                                const myProducts = foundUser.myProducts;   
+
+                                res.render('seller/dashboard', {
+                                    signUpfName: signUpfName,
+                                    signUplName: signUplName,
+                                    signUpEmail: signUpEmail,
+                                    storeName: storeName,
+                                    storeType: storeType,
+                                    storeDescription: storeDescription,
+                                    myProducts: myProducts
+                                })
                             }
                         }
-                    ) 
-                                           
-                    res.render('seller/dashboard', {
-                        signUpfName: signUpfName,
-                        signUplName: signUplName,
-                        signUpEmail: signUpEmail,
-                        storeName: storeName,
-                        storeType: storeType,
-                        storeDescription: storeDescription,
-                        myProducts: myProducts
-                    });
+                    )
+
+                }else{
+                    if(foundUser.store['brand']){
+
+                        const signUpfName = foundUser.fname;
+                        const signUplName = foundUser.lname;
+                        const storeName = foundUser.store.brand;
+                        const storeType = foundUser.store.type;
+                        const storeDescription = foundUser.store.about;
+                        const myProducts = foundUser.myProducts;
+
+                        res.render('seller/dashboard', {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            storeName: storeName,
+                            storeType: storeType,
+                            storeDescription: storeDescription,
+                            myProducts: myProducts
+                        });
+
+                    }else{
+                        
+                        const signUpfName = req.body.signUpfName;
+                        const signUplName = req.body.signUplName;
+                        const storeName = req.body.storeName;
+                        const storeDescription = req.body.storeDescription;
+                        const storeType = req.body.storeType;
+                        const myProducts = foundUser.myProducts;
+                        
+                        sellerID.updateMany(
+                            {email: signUpEmail}, 
+                            {store: {brand: storeName, type: storeType, about: storeDescription}},
+                            function(err){
+                                if(err){
+                                    console.log(err);
+                                }else{
+                                    console.log('all added to database');
+                                }
+                            }
+                        ) 
+                                            
+                        res.render('seller/dashboard', {
+                            signUpfName: signUpfName,
+                            signUplName: signUplName,
+                            signUpEmail: signUpEmail,
+                            storeName: storeName,
+                            storeType: storeType,
+                            storeDescription: storeDescription,
+                            myProducts: myProducts
+                        });
+                    }
                 }
             }
         }
@@ -1531,6 +1579,41 @@ app.post('/edit-product', function(req, res){
             }
         }
     })
+})
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+app.post('/seller-settings', function(req, res){
+
+    const signUpEmail = req.body.signUpEmail2; 
+
+    sellerID.findOne({email: signUpEmail}, function(err, foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(foundUser){
+                // console.log(foundUser);
+                const userfName = foundUser.fname;
+                const userlName = foundUser.lname;
+                const storeName = foundUser.store.brand;
+                const storeInfo = foundUser.store.about;
+                const storeType = foundUser.store.type;
+                res.render('seller/settings', {
+                    userfName: userfName,
+                    userlName: userlName,
+                    storeName: storeName,
+                    storeInfo: storeInfo,
+                    storeType: storeType,
+                    signUpEmail: signUpEmail
+                });
+            }
+        }
+    })
+
 })
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              { Categories button Home page END }@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
