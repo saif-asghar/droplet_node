@@ -226,3 +226,46 @@ body::-webkit-scrollbar-thumb:hover {
 .passwords:focus{
   color: black !important;
 }
+.passwords{
+  background-color: aliceblue !important;
+}
+
+.passwords-disabled{
+  background-color: silver !important;
+}
+
+.err{
+  color: red;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+.err2{
+  color: green;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+.err3{
+  color: black;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+#randomP{
+  transition: 1s;
+  width: 400px;
+  color: white;
+  padding: 10px 40px;
+  border: 1px solid #BAD7DF;
+  border-radius: 5px;
+  background-color: #BAD7DF;
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 100;
+}
+
+.hiddenDplay{
+  display: none !important;
+}

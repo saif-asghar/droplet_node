@@ -15,8 +15,11 @@
 
 
 <body>
+    
+    <p id="randomP" class="container hiddenDplay"></p>
+
     <form style="margin-block-end: 0px !important;" action="/dashboard" method="post">
-        <input type="hidden" name="signUpEmail" value="<%= signUpEmail %>">
+        <input type="hidden" name="signUpEmail" id="signUpEmail" value="<%= signUpEmail %>">
     <div class="settings-page">
         <div class="settings-container">
             <h1 class="page-title">Account</h1>
@@ -27,14 +30,12 @@
                     <div class="d-flex">
                         <div class="img-upload-container justify-content-between">
                             <div class="d-flex" style="align-items: center;">
-                                <label class="img-upload btn btn-bwm"
-                                    style="background-image: url(&quot;/profile-placeholder.jpg&quot;);">
+                                <label class="img-upload btn btn-bwm">
                                     <input type="file" accept=".jpg, .png, .jpeg, .gif" value="">
                                 </label>
                                 <h4>Change Your Store Picture</h4>
                                 <div class="img-preview-container">
-                                    <div class="img-preview"
-                                        style="background-image: url('http://www.personalbrandingblog.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png');">
+                                    <div class="img-preview">
                                     </div>
                                 </div>
                             </div>
@@ -77,21 +78,24 @@
                 <form class="form my-form">
                     <div class="form-group">
                         <div class="input-group">
-                            <input name="currentPassword" placeholder="Old Password" type="password"
-                                class="form-control passwords" autocomplete="Old Password" value="">
+                            <input onkeyup="openNewPass(this)" placeholder="Old Password" type="password" class="form-control passwords" id="oldPass" autocomplete="Old Password">
+                            <input type="hidden" value="<%= signUpEmail %>">
                             <span class="focus-input"></span>
                         </div>
+                        <h6 id="err" style="display: none;" class="err">Incorrect Password</h6>
+                        <h6 id="err2" style="display: none;" class="err2">Correct Password</h6>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
-                            <input name="password" placeholder="New Password" type="password" class="form-control passwords"
-                                autocomplete="New Password" value="">
-                            <span class="focus-input"></span>
-                        </div>
+                            <input name="password" disabled id="newPass" placeholder="New Password" type="password" class="form-control passwords-disabled"
+                                autocomplete="New Password">
+                                <span class="focus-input"></span>
+                            </div>
+                        <h6 id="err3" style="display: none;" class="err3">Please enter new password</h6>
                     </div>
 
                     <div class="text-right">
-                        <button type="button" onclick="changePassword()" class="btn btn-outline-secondary px-5">Change Password</button>
+                        <button id="changePassBtn" type="button" disabled onclick="changePassword(this)" class="btn btn-outline-secondary px-5">Change Password</button>
                     </div>
                 </form>
             </div>
@@ -107,6 +111,8 @@
 
 </form>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="js/seller/changePass.js"></script>
 </body>
 
 </html>
